@@ -62,7 +62,9 @@ http --session=~/tmp/session.json :3000/api/data/
 
 # TODO!
 
-1. Write tests (when proof-of-concept is valid)
-2. Secure all string-schema fields by patterns
-3. Swap generator to Yeoman?
-4. Publish on Npm
+1. Refactor to use adapters for dbService. All FS-DB stuff into respective adapter. Add LMDB adapter <= Set to default?
+2. Redo templateService, too complex
+3. Write tests (when proof-of-concept is valid) <= Include `db.blueprint` in tests, not in app...?
+4. Secure all string-schema fields by patterns
+5. Swap generator to Yeoman? <= Do I even need a generator? -CLI?
+6. Publish on Npm

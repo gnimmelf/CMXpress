@@ -65,9 +65,9 @@ module.exports = ({ dbService, accessService, userService }) =>
 
               /*
                 TODO! Validate `schema` (AJV?)
+                - Figure out how to validate the schemas themselves, against my own schema "extension"?
                 - Make properly: required ["ACLg", "title", "idProperty"]
                   - `idProperty can be `false` for "singleton"-schemas, like `site.*`-schemas & data...
-                - Figure out how to validate the schemas themselves, agains my own schema "extension"?
               */
 
               if (!schema.isSingleton) {
