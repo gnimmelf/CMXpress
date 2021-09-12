@@ -1,0 +1,8 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "properties": {
+    "creator": { "$ref": ".user.common.json#/properties/email" },
+    "lastModifier": { "$ref": ".user.common.json#/properties/email" }
+  }
+}

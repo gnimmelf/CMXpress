@@ -1,0 +1,70 @@
+{
+  "name": "manifester",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "NODE_ENV=test LOG_LEVEL=error mocha --exit",
+    "start": "node start index.js",
+    "dev": "nodemon start index.js --ignore data"
+  },
+  "bin": {
+    "manifest-a-site": "generators/create-site/create-site.js"
+  },
+  "dependencies": {
+    "ajv": "^6.12.5",
+    "awilix-express": "^4.0.0",
+    "body-parser": "^1.19.0",
+    "caller": "^1.0.1",
+    "chokidar": "^3.5.2",
+    "cli-table": "^0.3.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "deasync": "^0.1.10",
+    "debug": "~2.6.8",
+    "deep-assign": "^2.0.0",
+    "deep-object-diff": "^1.1.0",
+    "delete": "^1.1.0",
+    "dirtree": "0.0.2",
+    "dot-prop": "^4.2.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-list-endpoints": "^3.0.1",
+    "intersect": "^1.0.1",
+    "is-obj": "^1.0.1",
+    "js-pointer": "^3.1.1",
+    "jsend": "^1.1.0",
+    "json-schema-ref-parser": "^3.3.1",
+    "jsonpath": "^1.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "lmdb-store": "^1.6.7",
+    "minimatch": "^3.0.4",
+    "mkdirp": "^0.5.5",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.6.3",
+    "nodemailer-mailgun-transport": "^2.1.3",
+    "normalize-bool": "^1.0.0",
+    "omit": "^1.0.1",
+    "pug": "^3.0.2",
+    "restful-error": "^1.0.6",
+    "serve-favicon": "^2.5.0",
+    "slug": "^0.9.4",
+    "string-format-obj": "^1.1.1",
+    "table": "^4.0.3",
+    "winston": "^3.3.3",
+    "write-file-atomic": "^2.4.3"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "colors": "^1.4.0",
+    "inquirer": "^6.5.2",
+    "mocha": "^9.1.1",
+    "nodemon": "^2.0.12",
+    "os-tmpdir": "^1.0.2",
+    "shelljs": "^0.7.8"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "title": "Blog",
+  "ACLg": {
+    "*": ["read"]
+  },
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "content": {
+      "type": "string",
+      "title": "Content"
+    }
+  },
+  "idProperty": "#/title",
+  "meta": { "$ref": ".core.meta.json#/properties" }
+}

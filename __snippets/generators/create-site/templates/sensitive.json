@@ -1,0 +1,16 @@
+{
+  "superuser": {
+    "email": "gnimmelf@gmail.com",
+    "firstName": "Flemming",
+    "lastName": "Hansen"
+  },
+  "hashSecret": "superDuperSecret",
+  "mailConfig": {
+    "senderEmail": "post@example.com",
+    "mailgunAuth": {
+      "api_key": "key-1234123412341234",
+      "domain": "example.com"
+    }
+  },
+  "corsPolicy": "*"
+}

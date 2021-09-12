@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "array",
+  "title": "Site settings",
+  "ACLg": {
+    "user": ["read"]
+  },
+  "items": {
+    "type": "object",
+    "name": {
+      "type": "string",
+      "title": "Name"
+    },
+    "key": {
+      "type": "string",
+      "title": "Slug"
+    },
+    "accessLevel": {
+      "type": "integer",
+      "title": "Access-level",
+      "description": "More is less"
+    }
+  },
+  "isSingleton": true
+}

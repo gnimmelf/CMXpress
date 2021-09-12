@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "title": "Account details",
+  "ACLg": {
+    "*": ["read"]
+  },
+  "required": ["handle", "email", "firstName", "lastName"],
+  "properties": {
+    "$ref": ".user.common.json#/properties"
+  },
+  "idProperty": "#/handle",
+  "isSingleton": true
+}

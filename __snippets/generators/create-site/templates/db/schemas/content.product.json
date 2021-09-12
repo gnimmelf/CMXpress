@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "title": "Product",
+  "ACLg": {
+    "editor": ["*"]
+  },
+  "required": ["title", "content"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "content": {
+      "type": "string",
+      "title": "Description"
+    }
+  },
+  "idProperty": "#/title",
+  "meta": { "$ref": ".core.meta.json#/properties" }
+}
