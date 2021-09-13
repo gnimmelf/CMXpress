@@ -35,7 +35,12 @@ exports.maybeThrow = (predicate, messageOrData, RestErrorTypeOrCode) => {
   }
 }
 
-exports.addFileExt = (path, ext = ".json") => path.endsWith(ext) ? path : `${path}.json`;
+exports.makeMapKey = (...parts) => {
+  const mapKey = parts
+    .filter(x => x)
+    .join('/')
+  return mapKey.endsWith('.json') ? mapKey : mapKey + '.json';
+}
 
 exports.ensureDir = (dirPath) => {
   mkdirp(dirPath);

@@ -8,7 +8,7 @@ const draft06 = require('ajv/lib/refs/json-schema-draft-06.json');
 const {
   maybeThrow,
   inspect,
-  addFileExt
+  makeMapKey
 } = require('../../lib/utils');
 
 const cache = {};
@@ -36,7 +36,8 @@ module.exports = ({ dbService, accessService, userService }) =>
     return ajv;
   };
 
-  const makeSchemaName = (schemaNamePrefix, schemaNameSuffix) => `${schemaNamePrefix}${schemaNameSuffix ? '.' + schemaNameSuffix : ''}`.replace(/\.+/g, '.');
+  const makeSchemaName = (schemaNamePrefix, schemaNameSuffix) =>
+    `${schemaNamePrefix}${schemaNameSuffix ? '.' + schemaNameSuffix : ''}`.replace(/\.+/g, '.');
 
   return {
 
@@ -46,7 +47,7 @@ module.exports = ({ dbService, accessService, userService }) =>
 
     getSchema: (schemaName, operation = 'read', { owner = null, noAuth = false } = {}) => {
       return new Promise((resolve, reject) => {
-        schemaName = addFileExt(schemaName, ".json");
+        schemaName = makeMapKey(schemaName);
 
         maybeThrow(!schemaDb.get(schemaName, { raw: true }), `Schema '${schemaName}' not found`, 404)
 

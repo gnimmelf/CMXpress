@@ -31,14 +31,14 @@ module.exports = ({ dbService, templateService, mailService, objService }) => {
     requestLoginCodeByEmail: (email) => {
       return new Promise((resolve, reject) => {
 
-        const relPath = maybeGetAuthPath(email);
+        const mapKey = maybeGetAuthPath(email);
 
         const loginCode = makeLoginCode();
         const siteSettings = objService.getSiteSettings();
 
         debug({ siteSettings });
 
-        userDb.set(relPath, 'loginCode', loginCode);
+        userDb.set(mapKey, 'loginCode', loginCode);
 
         templateService['mail-login-code']
           .render({
@@ -71,18 +71,18 @@ module.exports = ({ dbService, templateService, mailService, objService }) => {
     exchangeLoginCode2Token: (email, loginCode, renewtoken) => {
       return new Promise((resolve, reject) => {
 
-        const relPath = maybeGetAuthPath(email);
+        const mapKey = maybeGetAuthPath(email);
 
-        const authData = userDb.get(relPath);
+        const authData = userDb.get(mapKey);
 
         maybeThrow(!authData.loginCode, 'No login-code requested', 422);
         maybeThrow(authData.loginCode != loginCode, 'Login-code incorrect', 422);
 
-        userDb.set(relPath, 'loginCode', '');
+        userDb.set(mapKey, 'loginCode', '');
 
         // Create new token
         const authToken = jwt.sign({ email: email, salt: makeLoginCode(20) }, hashSecret);
-        userDb.set(relPath, 'authToken', authToken);
+        userDb.set(mapKey, 'authToken', authToken);
 
         resolve(authToken)
       });
@@ -96,9 +96,9 @@ module.exports = ({ dbService, templateService, mailService, objService }) => {
 
         const decoded = jwt.verify(token, hashSecret);
 
-        const relPath = maybeGetAuthPath(decoded.email);
+        const mapKey = maybeGetAuthPath(decoded.email);
 
-        const authData = userDb.get(relPath);
+        const authData = userDb.get(mapKey);
 
         maybeThrow(!authData, 'Token not found', 404)
         maybeThrow(!authData.authToken, 'No matching token found', 401)
@@ -113,9 +113,9 @@ module.exports = ({ dbService, templateService, mailService, objService }) => {
     invalidateToken: (email) => {
       return new Promise((resolve, reject) => {
 
-        const relPath = maybeGetAuthPath(email);
+        const mapKey = maybeGetAuthPath(email);
 
-        userDb.delete(relPath, 'authToken');
+        userDb.delete(mapKey, 'authToken');
 
         resolve("Token invalidated");
       });

@@ -9,7 +9,7 @@ const authorizeRequest = require('../../middleware/authorizeRequest');
 
 // User
 router.get('/list', authorizeRequest(['user']), api('getUserList'));
-router.get('/current', api('getCurrentUser'));
+router.get('/current/:dottedPath?', api('getCurrentUser'));
 router.get('/current/groups', api('getCurrentUserGroups'));
 router.get('/logout', api('invalidateSession'));
 router.post('/register', api('registerUser'));

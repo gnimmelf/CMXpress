@@ -2,7 +2,7 @@ const debug = require('debug')('mf:api:users');
 
 const {
   sendApiResponse,
-  requestFullUrl,
+  dotProp,
   maybeThrow } = require('../lib/utils');
 
 const RE_RE_USER_SCHEMA_MASK = new RegExp(/^user\./);
@@ -50,10 +50,15 @@ module.exports = ({ userService, authService, objService, tokenKeyName }) => {
     getCurrentUser: (req, res) => {
       return new Promise((resolve, reject) => {
         const user = userService.currentUser;
+        const { dottedPath } = req.params
 
         maybeThrow(!user, 'Not logged in', 401)
 
-        resolve(user);
+        resolve(dottedPath
+          ? dotProp.get(user, dottedPath)
+          : user)
+
+
       })
         .then(payload => {
           sendApiResponse(res, payload)
