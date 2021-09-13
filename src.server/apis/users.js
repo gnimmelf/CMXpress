@@ -7,8 +7,6 @@ const {
   throwNotImplemented,
 } = require('../lib/utils');
 
-const RE_RE_USER_SCHEMA_MASK = new RegExp(/^user\./);
-
 module.exports = ({ userService, authService, objService, tokenKeyName }) => {
 
   const getUserByHandle = (handle) => {

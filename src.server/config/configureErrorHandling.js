@@ -23,6 +23,7 @@ module.exports = (app) => {
     err.data = {
       url: getRequestFullUrl(req),
       params: req.params,
+      method: req.method,
     };
 
     sendApiResponse(res, err);
