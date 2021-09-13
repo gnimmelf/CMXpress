@@ -41,7 +41,10 @@ module.exports = (app, { nodeEnv }) => {
     global.__localAppRoot = require.main.path;
   }
 
+  // Make getEnv globally accesiible
   global.__getEnv = getEnv
+
+  // TODO! Assert required ENV-variables. `DB_ROOT`, `TOKEN_KEY`, `TOKEN_SECRET`, etc.
 
   // Standard config return, a list of [k,v] tuples
   return [

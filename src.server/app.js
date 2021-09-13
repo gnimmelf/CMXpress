@@ -71,7 +71,7 @@ Object.entries(configLogs).forEach(([category, configTuples]) => configTuples.fo
 
 // CORS
 // NOTE! The manifested `localApp` must set it's own CORS when in production (see `../index.js`)
-// TODO! 2021 - Something weird with pure rest clients and new chrome cors policy
+// TODO! CORS - Something weird with pure rest clients and new chrome cors policy
 const corsOptions = {
   "origin": "*",
   "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
