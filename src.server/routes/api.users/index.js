@@ -3,7 +3,7 @@ const { Router } = require('express');
 const { makeInvoker } = require('awilix-express');
 
 const router = Router();
-const api = makeInvoker(require('../../apis/user'));
+const api = makeInvoker(require('../../apis/users'));
 
 const authorizeRequest = require('../../middleware/authorizeRequest');
 

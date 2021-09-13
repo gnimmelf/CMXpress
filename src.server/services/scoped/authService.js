@@ -1,6 +1,5 @@
 const debug = require('debug')('mf:service:authService');
 const { join } = require('path');
-const jsonPath = require('jsonpath');
 const jwt = require('jsonwebtoken');
 const makeLoginCode = require('../../lib/makeLoginCode');
 const {
@@ -13,11 +12,11 @@ const AUTH_FILE = 'auth.json';
 const hashSecret = process.env.TOKEN_SECRET
 
 module.exports = ({ dbService, templateService, mailService, objService }) => {
+  // NOTE! `userService` is too high-level to use for authentification!
   const userDb = dbService.user;
 
   const maybeGetAuthPath = (email) => {
-    const query = `$[*]['user.json']`
-    const node = jsonPath.nodes(userDb.tree, query)
+    const node = userDb.jsonPath(`$[*]['user.json']`)
       .find(node => node.value.email == email);
 
     maybeThrow(!node, 'No user found by given email', 422);

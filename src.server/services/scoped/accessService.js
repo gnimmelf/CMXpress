@@ -1,8 +1,6 @@
 const debug = require('debug')('mf:service:accessService');
 const { join } = require('path');
 const intersect = require('intersect');
-const jsonPath = require('jsonpath');
-const jwt = require('jsonwebtoken');
 const {
   maybeThrow
 } = require('../../lib/utils');

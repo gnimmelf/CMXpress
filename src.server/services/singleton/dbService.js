@@ -11,12 +11,14 @@ module.exports = ({ dbRoot }) => {
       'user',
       'content',
     ].forEach(db => {
+
       assert(dbService[db], `dbService.${db} missing!`)
         ;[
           'get',
           'set',
           'delete',
-          'name'
+          'name',
+          'jsonPath'
         ].forEach(prop => {
           assert(dbService[db][prop], `dbService.${db}.${prop} missing!`)
         })

@@ -3,7 +3,7 @@ const { Router } = require('express');
 const { makeInvoker } = require('awilix-express');
 
 const router = Router();
-const api = makeInvoker(require('../../apis/schema'));
+const api = makeInvoker(require('../../apis/schemas'));
 
 router.get('/list/:globpattern?/:operation?', api('getSchemaNames'));
 router.get('/:schemaName', api('getSchema'));
