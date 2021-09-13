@@ -15,7 +15,7 @@ module.exports = makeSingleInvoker(({ tokenKeyName, authService, userService }) 
         debug('autheticated', decoded.email);
 
         // TODO! Not too happy about this one, but most dependencies are circular, so no other way in...
-        const currentUser = userService.setCurrentUserBy('email', decoded.email);
+        userService.setCurrentUserBy('email', decoded.email);
 
         next();
       })

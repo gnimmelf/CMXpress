@@ -7,9 +7,9 @@ const apiContent = makeInvoker(require('../../apis/content'));
 
 // Data
 router.get('/:schemaNameSuffix/list', apiContent('getObjectIds'));
-router.get('/:schemaNameSuffix/:objId/:dottedPath?', apiContent('getObj'));
-router.post('/:schemaNameSuffix/:objId?/:dottedPath?', apiContent('setObj'));
-router.delete('/:schemaNameSuffix/:objId/:dottedPath?', apiContent('deleteObj'))
+router.get('/:schemaNameSuffix/:objId/:propPath?', apiContent('getObj'));
+router.post('/:schemaNameSuffix/:objId?/:propPath?', apiContent('setObj'));
+router.delete('/:schemaNameSuffix/:objId/:propPath?', apiContent('deleteObj'))
 
 module.exports = router;
 

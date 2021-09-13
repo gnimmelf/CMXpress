@@ -68,8 +68,11 @@ module.exports = ({ dbService }) => {
 
   return {
     // Functions
+
+    // TODO! Refresh `currentUser` after updating user
+
     setCurrentUserBy: (key, value) => {
-      debug('setCurrentUserBy', key, value, `(was '${currentUser && currentUser.email})'`);
+      debug('setCurrentUserBy', key, value, `(was '${currentUser?.email})'`);
       currentUser = getUserBy(key, value);
     },
     getUserBy,

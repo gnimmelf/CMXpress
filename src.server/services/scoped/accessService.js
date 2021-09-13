@@ -12,8 +12,8 @@ module.exports = ({ dbService }) => {
   const accessGroups = dbService.site.get('groups.json');
 
   const parseUser = (user) => user && user[IS_PARSED] ? user : ({
-    id: (user ? user.userId : false),
-    groups: (user ? user.groups : []),
+    id: user?.userId || false,
+    groups: user?.groups || [],
     [IS_PARSED]: true,
   });
 
@@ -79,7 +79,7 @@ module.exports = ({ dbService }) => {
     user = parseUser(user);
     owner = parseUser(owner);
 
-    const isOwner = (user.id && owner.id ? user.id == owner.id : false);
+    const isOwner = (user.id && owner.id) && user.id == owner.id
 
     let isAuthorized = isOwner
 
@@ -99,14 +99,14 @@ module.exports = ({ dbService }) => {
 
     debug('authorizeByACLg', isAuthorized, isOwner)
 
-    return user;
+    return isAuthorized;
   };
 
   return {
     authorize: (...args) => (args[1] instanceof Array ? authorizeByGroups(...args) : authorizeByACLg(...args)),
-    getRestrictionLevel: getRestrictionLevel,
-    getAccessLevel: getAccessLevel,
-    authorizeByGroups: authorizeByGroups,
-    authorizeByACLg: authorizeByACLg,
+    getRestrictionLevel,
+    getAccessLevel,
+    authorizeByGroups,
+    authorizeByACLg,
   }
 };

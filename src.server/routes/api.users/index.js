@@ -9,16 +9,17 @@ const authorizeRequest = require('../../middleware/authorizeRequest');
 
 // User
 router.get('/list', authorizeRequest(['user']), api('getUserList'));
-router.get('/current/:dottedPath?', api('getCurrentUser'));
+router.get('/current/:propPath?', api('getCurrentUser'));
 router.get('/current/groups', api('getCurrentUserGroups'));
 router.get('/logout', api('invalidateSession'));
 router.post('/register', api('registerUser'));
+router.post('/update/:userHandle', api('updateUser'));
 
 // User-data
 router.get('/:userHandle/data/:schemaNameSuffix/list', api('getObjectIds'));
 router.get('/:userHandle/data/:schemaNameSuffix/:objId', api('getObj'));
-router.post('/:userHandle/data/:schemaNameSuffix/:objId/:dottedPath?', api('setObj'));
-router.delete('/:userHandle/data/:schemaNameSuffix/:objId/:dottedPath?', api('setObj'));
+router.post('/:userHandle/data/:schemaNameSuffix/:objId/:propPath?', api('setObj'));
+router.delete('/:userHandle/data/:schemaNameSuffix/:objId/:propPath?', api('deleteObj'));
 
 module.exports = router;
 

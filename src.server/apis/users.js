@@ -3,23 +3,13 @@ const debug = require('debug')('mf:api:users');
 const {
   sendApiResponse,
   dotProp,
-  maybeThrow } = require('../lib/utils');
+  maybeThrow,
+  throwNotImplemented,
+} = require('../lib/utils');
 
 const RE_RE_USER_SCHEMA_MASK = new RegExp(/^user\./);
 
 module.exports = ({ userService, authService, objService, tokenKeyName }) => {
-
-  const createUser = ({ email, ...body }) => {
-    return new Promise((resolve, reject) => {
-      const node = userService.getUserBy('email', email)
-
-      maybeThrow(node, 'User already registered by given email', 403)
-
-      const res = objService.createObj('user', { email, ...body }, {}, { noAuth: true })
-
-      resolve(res)
-    })
-  }
 
   const getUserByHandle = (handle) => {
     return new Promise((resolve) => {
@@ -50,15 +40,13 @@ module.exports = ({ userService, authService, objService, tokenKeyName }) => {
     getCurrentUser: (req, res) => {
       return new Promise((resolve, reject) => {
         const user = userService.currentUser;
-        const { dottedPath } = req.params
+        const { propPath } = req.params
 
         maybeThrow(!user, 'Not logged in', 401)
 
-        resolve(dottedPath
-          ? dotProp.get(user, dottedPath)
+        resolve(propPath
+          ? dotProp.set({}, propPath, dotProp.get(user, propPath))
           : user)
-
-
       })
         .then(payload => {
           sendApiResponse(res, payload)
@@ -144,7 +132,10 @@ module.exports = ({ userService, authService, objService, tokenKeyName }) => {
 
       getUserByHandle(userHandle)
         .then((owner) => {
-          return objService[method]('user', req.body, params, { owner });
+
+          const data = objService[method]('user', req.body, params, { owner });
+
+          return data
         })
         .then(data => {
           sendApiResponse(res, data)
@@ -174,12 +165,57 @@ module.exports = ({ userService, authService, objService, tokenKeyName }) => {
     registerUser: (req, res) => {
       debug('registerUser', req.params);
 
-      createUser(req.body)
+      new Promise((resolve) => {
+
+        throwNotImplemented()
+
+        const { email, ...body } = req.body
+        const node = userService.getUserBy('email', email)
+        maybeThrow(node, 'User already registered by given email', 403)
+
+        // TODO! Access! Only `process.env.ROOT_USER_EMAIL` can register with `noAuth`
+        // TODO! Access! Only admins can register new users?
+        const user = objService.createObj('user', { email, ...body }, {}, { noAuth: true })
+
+        resolve(user)
+      })
         .then(data => {
           sendApiResponse(res, data)
         })
         .catch(err => {
           sendApiResponse(res, err)
+        });
+    },
+
+    updateUser: (req, res) => {
+      debug('updateUser', req.params);
+
+      new Promise((resolve) => {
+
+        throwNotImplemented()
+
+        const { userHandle, ...params } = req.params;
+
+        // TODO! Make sure email is unique
+        const { email, ...body } = req.body
+        const node = userService.getUserBy('email', email)
+        maybeThrow(node, 'User already registered by given email', 403)
+
+        // TODO! Access! Only `currentUser` can update `currentUser` unless admin!
+        if (userService.currentUser.id) {
+          userService.setCurrentUserBy('email', currentUser.email)
+        }
+
+        return getUserByHandle(userHandle)
+      })
+        .then((owner) => {
+          return objService.getObj('user', params, { owner });
+        })
+        .then(data => {
+          sendApiResponse(res, data);
+        })
+        .catch(err => {
+          sendApiResponse(res, err);
         });
     }
 

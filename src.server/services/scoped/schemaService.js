@@ -7,11 +7,9 @@ const Ajv = require('ajv');
 const draft06 = require('ajv/lib/refs/json-schema-draft-06.json');
 const {
   maybeThrow,
-  inspect,
-  makeMapKey
+  makeSchemaName,
+  makeMapKey,
 } = require('../../lib/utils');
-
-const cache = {};
 
 const getRelFsPath = (fsPath) => relative(process.cwd(), fsPath);
 
@@ -36,9 +34,6 @@ module.exports = ({ dbService, accessService, userService }) =>
     return ajv;
   };
 
-  const makeSchemaName = (schemaNamePrefix, schemaNameSuffix) =>
-    `${schemaNamePrefix}${schemaNameSuffix ? '.' + schemaNameSuffix : ''}`.replace(/\.+/g, '.');
-
   return {
 
     makeSchemaName,
@@ -54,34 +49,27 @@ module.exports = ({ dbService, accessService, userService }) =>
         // TODO! Move into dbService as it is provider-dependent
         const fsPath = getRelFsPath(join(schemaDb.root, schemaName));
 
-        if (cache[fsPath]) {
-          resolve(cache[fsPath]);
-        }
-        else {
-          $RefParser.dereference(fsPath)
-            .then(schema => {
 
-              // Force no additional properties
-              schema.additionalProperties = false;
+        $RefParser.dereference(fsPath)
+          .then(schema => {
 
-              /*
-                TODO! Validate `schema` (AJV?)
-                - Figure out how to validate the schemas themselves, against my own schema "extension"?
-                - Make properly: required ["ACLg", "title", "idProperty"]
-                  - `idProperty can be `false` for "singleton"-schemas, like `site.*`-schemas & data...
-              */
+            // Force no additional properties
+            schema.additionalProperties = false;
 
-              if (!schema.isSingleton) {
-                maybeThrow(!schema.idProperty, `Invalid schema: No 'idProperty' found on '${schemaName}'`, 424);
-              }
+            /*
+              TODO! Validate `schema` (AJV?)
+              - Figure out how to validate the schemas themselves, against my own schema "extension"?
+              - Make properly: required ["ACLg", "title", "idProperty"]
+                - `idProperty can be `false` for "singleton"-schemas, like `site.*`-schemas & data...
+            */
 
-              cache[fsPath] = schema;
-              debug("added to cache", fsPath);
-              resolve(schema);
+            if (!schema.isSingleton) {
+              maybeThrow(!schema.idProperty, `Invalid schema: No 'idProperty' found on '${schemaName}'`, 424);
+            }
+            resolve(schema);
 
-            })
-            .catch(err => reject(err));
-        }
+          })
+          .catch(err => reject(err));
       })
         .then(schema => {
           if (!noAuth) {
