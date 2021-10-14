@@ -6,6 +6,16 @@ _JSON-Schema based headless CMS_
 
 Under leisure development.
 
+### TODO!
+
+1. Refactor to use adapters for dbService. All FS-DB stuff into respective adapter. Add LMDB adapter <= Set to default?
+2. Write tests (when proof-of-concept is valid) <= Include `db.blueprint` in tests, not in app...?
+3. Redo templateService, too complex
+
+4. Secure all string-schema fields by patterns
+5. Swap generator to Yeoman? <= Do I even need a generator? -CLI?
+6. Publish on Npm
+
 ## Tech
 
 - https://www.npmjs.com/package/jsonpath
@@ -59,12 +69,3 @@ http --session=~/tmp/session.json :3000/api/auth/logout
 
 http --session=~/tmp/session.json :3000/api/data/
 ```
-
-# TODO!
-
-1. Refactor to use adapters for dbService. All FS-DB stuff into respective adapter. Add LMDB adapter <= Set to default?
-2. Redo templateService, too complex
-3. Write tests (when proof-of-concept is valid) <= Include `db.blueprint` in tests, not in app...?
-4. Secure all string-schema fields by patterns
-5. Swap generator to Yeoman? <= Do I even need a generator? -CLI?
-6. Publish on Npm

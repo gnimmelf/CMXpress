@@ -82,6 +82,7 @@ module.exports = ({ dbService, schemaService }) => {
           const isValid = ajv.validate(schema, data);
           maybeThrow(!isValid, ajv.errors, 400);
 
+          // TODO! Figure out if this is smart even if the `idProperty` is later updated...
           // Set `objId` based on `idProperty`
           const idPropertyValue = jsonPointer.get(data, schema.idProperty);
           const objId = slug(idPropertyValue.toLowerCase());

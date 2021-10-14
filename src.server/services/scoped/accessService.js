@@ -58,6 +58,7 @@ module.exports = ({ dbService }) => {
 
     const accessLevel = getAccessLevel(user.groups);
     const restrictionLevel = getRestrictionLevel(allowedGroups);
+    // Just compare levels
     const isAuthorized = accessLevel <= restrictionLevel;
 
     debug('authorizeByGroups', {

@@ -194,10 +194,11 @@ module.exports = ({ userService, authService, objService, tokenKeyName }) => {
 
         const { userHandle, ...params } = req.params;
 
-        // TODO! Make sure email is unique
         const { email, ...body } = req.body
-        const node = userService.getUserBy('email', email)
-        maybeThrow(node, 'User already registered by given email', 403)
+        if (email) {
+          const node = userService.getUserBy('email', email)
+          maybeThrow(node, 'User already registered by given email', 403)
+        }
 
         // TODO! Access! Only `currentUser` can update `currentUser` unless admin!
         if (userService.currentUser.id) {
