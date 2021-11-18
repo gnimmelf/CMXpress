@@ -35,10 +35,12 @@ module.exports = (expressResponseObj, payload) => {
     }
   }
   else {
-    apiPayload = typeof payload == 'string' ? {
-      msg: payload,
-      data: undefined,
-    } : payload || {};
+    apiPayload = typeof payload == 'string'
+      ? {
+        msg: payload,
+        data: undefined,
+      }
+      : payload || {};
   }
 
   debug(`> apiPayload: ${status}`, apiPayload);

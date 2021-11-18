@@ -9,16 +9,16 @@ dotProp.set = (obj, path, value) => {
 
   path = path || '';
 
-  debug(path+':before', dotProp.get(obj, path));
+  debug(path + ':before', dotProp.get(obj, path));
 
   if (path) {
     dotProp_set(obj, path, value);
   }
-  else if (isObj(value)){
+  else if (isObj(value)) {
     Object.assign(obj, value);
   }
 
-  debug(path+':after', dotProp.get(obj, path))
+  debug(path + ':after', dotProp.get(obj, path))
 
   return obj;
 }

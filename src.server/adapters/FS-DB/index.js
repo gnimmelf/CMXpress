@@ -1,3 +1,4 @@
+const jsonPath = require('jsonpath');
 const { join } = require('path');
 const Db = require('./FS-DB');
 
@@ -15,9 +16,12 @@ const invalidateCache = (fsPath) => {
 
 const proxyHandler = {
     get: (target, name) => {
-        return name == 'name'
-            ? target.root
-            : target[name]
+        if (name === 'jsonPath') {
+            return (pathExpression) => {
+                return jsonPath.nodes(target.tree, pathExpression)
+            }
+        }
+        else return target[name]
     },
 }
 
@@ -27,19 +31,22 @@ module.exports = deasync(async ({ dbRoot }) => {
     const dbs = await Promise.all([
         new Db({
             root: ensureDir(join(dbRoot, 'schemas')),
+            name: 'schemas',
         }).promise,
         new Db({
             root: ensureDir(join(dbRoot, 'site')),
+            name: 'site',
         }).promise,
         new Db({
             root: ensureDir(join(dbRoot, 'users')),
+            name: 'users',
             instantPush: true,
         }).promise,
         new Db({
             root: ensureDir(join(dbRoot, 'content')),
+            name: 'content',
         }).promise,
     ])
-        // .then(proms => Promise.all(proms))
         .then(dbs => {
             return dbs.map(db => new Proxy(db, proxyHandler))
         })
@@ -58,7 +65,7 @@ module.exports = deasync(async ({ dbRoot }) => {
     dbs['schema'].watcher.on('change', invalidateCache);
     dbs['schema'].watcher.on('unlink', invalidateCache);
 
-    logger.verbose('dbService loaded!', { keys: Object.keys(dbs).join(', ') });
+    logger.verbose('dbService loaded!', { dbKeys: Object.keys(dbs).join(', ') });
 
     return dbs
 })

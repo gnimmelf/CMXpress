@@ -5,6 +5,7 @@ const sh = require('shelljs');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 
+<<<<<<< HEAD
 const SOURCE_DIR = join(__dirname, '../db.blueprint');
 const TARGET_DIR = join(osTmpdir(), 'mfs-site');
 
@@ -20,6 +21,13 @@ global.__fsRoot = TARGET_DIR;
 
 const manifester = require('../index');
 
+=======
+const server = require('../index');
+
+const DB_BLUEPRINT = join(__dirname, '../');
+const DB_TEST = join(osTmpdir(), 'mfs-site');
+
+>>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
 /**
  * Chai setup
  */
@@ -27,36 +35,56 @@ const manifester = require('../index');
 chai.use(chaiHttp);
 const { expect } = chai;
 
+<<<<<<< HEAD
 /**
  * Set up test app
  */
+=======
+>>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
 
 sh.rm('-rf', TARGET_DIR);
 sh.mkdir(TARGET_DIR);
 sh.cp('-R', `${SOURCE_DIR}/*`, TARGET_DIR);
 
-manifester.use('/', (req, res) => res.send('Test App\n'));
-manifester.run({
+server.use('/', (req, res) => res.send('Test App\n'));
+server.run({
   createServer: false,
 });
 
-const agent = chai.request.agent(manifester.mainApp)
+const agent = chai.request.agent(server.mainApp)
 
 /*
-  Paths
+  sections
 */
+<<<<<<< HEAD
 const endpoints = {
   appRoot: '/',
+=======
+const sections = {
+>>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
   inspect: '/api/inspect',
   inspectText: '/api/inspect/toText',
   inspectHtml: '/api/inspect/toHtml',
   currentUser: '/api/user/current',
+<<<<<<< HEAD
   userList: '/api/user/list',
   schemaList: '/api/schema/list',
   authRequest: '/api/auth/request',
 }
 
 describe('Unauthenticated user', () => {
+=======
+  userList: '/api/users/list',
+  schemaList: '/api/schemas/list',
+
+}
+
+// TODO! Start here! Write tests
+
+describe('not logged in', () => {
+
+  describe('200/Ok sections', () => {
+>>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
 
   describe('should have 200/OK at', () => {
     ([
@@ -66,6 +94,7 @@ describe('Unauthenticated user', () => {
       'inspectHtml',
       'schemaList',
     ])
+<<<<<<< HEAD
       .map(name => endpoints[name])
       .forEach(path => {
         it(path, async () => {
@@ -86,9 +115,19 @@ describe('Unauthenticated user', () => {
           const res = await agent.get(path);
           expect(res).to.have.status(401);
         });
+=======
+      .map(name => sections[name])
+      .forEach(path => {
+        it(sections.inspect, async () => {
+          const res = await agent.get(sections.inspect);
+          expect(res).to.have.status(200);
+        });
+
+>>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
       });
   });
 
+<<<<<<< HEAD
   describe('loggin in', () => {
 
     const endpoint = endpoints['authRequest']
@@ -97,6 +136,16 @@ describe('Unauthenticated user', () => {
     describe(`at ${endpoint} and`, () => {
 
       describe('requests loginCode', () => {
+=======
+  });
+
+  describe('401/Unauthorized sections', () => {
+
+    it(sections.currentUser, async () => {
+      const res = await agent.get(sections.currentUser)
+      expect(res).to.have.status(401);
+    });
+>>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
 
         it('posts without email => 422/UNPROCESSABLE_ENTITY', async () => {
           const res = await agent
@@ -127,55 +176,5 @@ describe('Unauthenticated user', () => {
     });
   });
 });
-/*
-┌────────┬──────────────────────────────────────────────────────────────────┐
-│ Method │ url                                                              │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/inspect                                                     │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/inspect/toHtml                                              │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/inspect/toText                                              │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ POST   │ /api/auth/request                                                │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ POST   │ /api/auth/exchange                                               │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ POST   │ /api/auth/authenticate                                           │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/schema/list/:globpattern?/:operation?                       │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/schema/:schemaName                                          │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/user/list                                                   │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/user/current                                                │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/user/current/groups                                         │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/user/logout                                                 │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/user/:userHandle/data/:schemaNameSuffix/list                │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/user/:userHandle/data/:schemaNameSuffix/:objId              │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ POST   │ /api/user/:userHandle/data/:schemaNameSuffix/:objId/:dottedPath? │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ DELETE │ /api/user/:userHandle/data/:schemaNameSuffix/:objId/:dottedPath? │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/data/content/:schemaNameSuffix/list                         │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/data/content/:schemaNameSuffix/:objId/:dottedPath?          │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ POST   │ /api/data/content/:schemaNameSuffix/:objId?/:dottedPath?         │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ DELETE │ /api/data/content/:schemaNameSuffix/:objId/:dottedPath?          │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/data/singleton/:dbKey/list/:globpattern?                    │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ GET    │ /api/data/singleton/:dbKey/:schemaNameSuffix/:dottedPath?        │
-├────────┼──────────────────────────────────────────────────────────────────┤
-│ POST   │ /api/data/singleton/:dbKey/:schemaNameSuffix/:dottedPath?        │
-└────────┴──────────────────────────────────────────────────────────────────┘
-*/
 
+describe('logged in')

@@ -1,15 +1,12 @@
 const debug = require('debug')('mf:service:userService');
 const { join } = require('path');
 const assert = require('assert');
-const jsonPath = require('jsonpath');
-const {
-  maybeThrow,
-  addFileExt
-} = require('../../lib/utils');
 
 // Symbols
 const USERID = Symbol('userId');
 const GROUPS = Symbol('groups');
+
+const JSON_PATH_USERS = "$[*]['user.json']"
 
 module.exports = ({ dbService }) => {
 
@@ -46,7 +43,7 @@ module.exports = ({ dbService }) => {
     assert(key, 'No key passed!')
 
     if (value) {
-      const node = jsonPath.nodes(userDb.tree, "$[*]['user.json']")
+      const node = userDb.jsonPath(JSON_PATH_USERS)
         .find(node => node.value[key] == value);
 
       // The `userId` is the second element of the `node.path`
@@ -60,7 +57,7 @@ module.exports = ({ dbService }) => {
 
   const getUserList = () => {
     if (userList == undefined) {
-      userList = jsonPath.nodes(userDb.tree, "$[*]['user.json']")
+      userList = userDb.jsonPath(JSON_PATH_USERS)
         .map(node => ({
           handle: node.path[1],
           name: `${node.value.firstName} ${node.value.lastName}`,
@@ -71,8 +68,11 @@ module.exports = ({ dbService }) => {
 
   return {
     // Functions
+
+    // TODO! Refresh `currentUser` after updating user
+
     setCurrentUserBy: (key, value) => {
-      debug('setCurrentUserBy', key, value, `(was '${currentUser && currentUser.email})'`);
+      debug('setCurrentUserBy', key, value, `(was '${currentUser?.email})'`);
       currentUser = getUserBy(key, value);
     },
     getUserBy,

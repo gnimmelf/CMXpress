@@ -34,8 +34,10 @@ exports.maybeThrow = (predicate, messageOrData, RestErrorTypeOrCode) => {
     }
   }
 }
+const maybeThrow = exports.maybeThrow
 
-exports.addFileExt = (path, ext = ".json") => path.endsWith(ext) ? path : `${path}.json`;
+exports.throwNotImplemented = (msg = 'Work in progress') =>
+  maybeThrow(true, msg, 'NOT_IMPLEMENTED')
 
 exports.ensureDir = (dirPath) => {
   mkdirp(dirPath);
@@ -65,3 +67,13 @@ exports.deasync = (asyncFn) => {
     return retVal
   }
 }
+
+exports.makeMapKey = (...parts) => {
+  const mapKey = parts
+    .filter(x => x)
+    .join('/')
+  return mapKey.endsWith('.json') ? mapKey : mapKey + '.json';
+}
+
+exports.makeSchemaName = (dbKey, schemaNameSuffix) =>
+  `${dbKey}.${schemaNameSuffix ? '.' + schemaNameSuffix : ''}`.replace(/\.+/g, '.');

@@ -22,7 +22,11 @@ module.exports = function (length = 5, previous = [], only_numerical = true) {
   var id;
 
   // Try to generate a unique ID,
+<<<<<<< HEAD
   // i.e. one that isn't in the `previous`.
+=======
+  // i.e. one that isn't in the previous.
+>>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
   while (!id && retries < UNIQUE_RETRIES) {
     id = generate_code(length, only_numerical);
     if (previous.indexOf(id) !== -1) {
