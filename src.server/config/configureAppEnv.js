@@ -35,7 +35,7 @@ module.exports = (app, { nodeEnv }) => {
 
   if (nodeEnv == 'test') {
     // Must be set globally allready!
-    assert(global.__fsRoot, '"global.__fsRoot" must be set when testing!');
+    assert(global.__fsRoot, '"global.__fsRoot" must be set in test file priot to instatiating app!');
   }
   else {
     // Set it to the folder of the main module, usually cwd
@@ -49,6 +49,7 @@ module.exports = (app, { nodeEnv }) => {
 
   // Standard config return, a list of [k,v] tuples
   return [
+    ['__fsRoot', __fsRoot],
     ['ALLOWED_ENVS', ALLOWED_ENVS.join(', ')],
     ['nodeEnv', nodeEnv],
   ]

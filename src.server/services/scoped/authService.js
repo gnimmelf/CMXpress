@@ -66,32 +66,18 @@ module.exports = ({ dbService, templateService, mailService, objService }) => {
     exchangeLoginCode2Token: (email, loginCode, renewtoken) => {
       return new Promise((resolve, reject) => {
 
-<<<<<<< HEAD
         const dbPath = maybeGetAuthPath(email);
 
         const authData = userDb.get(dbPath);
-=======
-        const mapKey = maybeGetAuthPath(email);
-
-        const authData = userDb.get(mapKey);
->>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
 
         maybeThrow(!authData.loginCode, 'No login-code requested', 422);
         maybeThrow(authData.loginCode != loginCode, 'Login-code incorrect', 422);
 
-<<<<<<< HEAD
         userDb.set(dbPath, 'loginCode', '');
 
         // Create new token
         const authToken = jwt.sign({ email: email, salt: makeLoginCode(20) }, hashSecret);
         userDb.set(dbPath, 'authToken', authToken);
-=======
-        userDb.set(mapKey, 'loginCode', '');
-
-        // Create new token
-        const authToken = jwt.sign({ email: email, salt: makeLoginCode(20) }, hashSecret);
-        userDb.set(mapKey, 'authToken', authToken);
->>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
 
         resolve(authToken)
       });
@@ -105,15 +91,9 @@ module.exports = ({ dbService, templateService, mailService, objService }) => {
 
         const decoded = jwt.verify(token, hashSecret);
 
-<<<<<<< HEAD
         const dbPath = maybeGetAuthPath(decoded.email);
 
         const authData = userDb.get(dbPath);
-=======
-        const mapKey = maybeGetAuthPath(decoded.email);
-
-        const authData = userDb.get(mapKey);
->>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
 
         maybeThrow(!authData, 'Token not found', 404)
         maybeThrow(!authData.authToken, 'No matching token found', 401)
@@ -128,15 +108,9 @@ module.exports = ({ dbService, templateService, mailService, objService }) => {
     invalidateToken: (email) => {
       return new Promise((resolve, reject) => {
 
-<<<<<<< HEAD
         const dbPath = maybeGetAuthPath(email);
 
         userDb.delete(dbPath, 'authToken');
-=======
-        const mapKey = maybeGetAuthPath(email);
-
-        userDb.delete(mapKey, 'authToken');
->>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
 
         resolve("Token invalidated");
       });
