@@ -12,13 +12,14 @@ const {
 module.exports = ({ app }) => {
   const endpoints = {
     asObj: expressListEndpoints(app)
+      .filter(endpoint => endpoint.methods && endpoint.path)
   };
 
   const table = new Table({
     head: ['Method', 'url'],
   });
 
-  table.push(...endpoints.asObj.map(r => ([r.methods[0], r.path])));
+  table.push(...endpoints.asObj.map(endpoint => ([endpoint.methods[0], endpoint.path])));
 
   endpoints.asText = table.toString();
   endpoints.asHtml = ['<pre>', table.toString().replace(/\x1B[[(?);]{0,2}(;?\d)*./g, ''), '</pre>'].join('\n');

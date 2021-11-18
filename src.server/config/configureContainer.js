@@ -2,6 +2,7 @@
  * "composition root":
  * https://medium.com/@Jeffijoe/dependency-injection-in-node-js-2016-edition-part-3-c01471c09c6d
  */
+const path = require('path');
 const assert = require('assert');
 const {
   createContainer,

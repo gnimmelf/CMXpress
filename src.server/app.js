@@ -21,10 +21,13 @@ const { loggers } = require('./lib/utils')
 
 /**
  * Express apps
+ * Working with two apps;
+ * - `app` - The main manifester app
+ * - `localApp` - The exposed app for local development extending the main manifester app
  */
 
 const app = express();
-app.localApp = express(); // The Express app for local development of the "head" in "headless"
+app.localApp = express();
 
 /**
  * View engine setup
@@ -49,7 +52,7 @@ configLogs['env'] = configureAppEnv(app, {
 // Loggers
 configLogs['logging'] = configureLogging(app, {
   logLevel: process.env.LOG_LEVEL || 'debug',
-  logFileDir: join(__localAppRoot, '/logs/'),
+  logFileDir: join(global.__fsRoot, '/logs/'),
 });
 
 // Awilix-container, set on `app`

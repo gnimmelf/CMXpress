@@ -35,20 +35,20 @@ module.exports = (app, { nodeEnv }) => {
 
   if (nodeEnv == 'test') {
     // Must be set globally allready!
-    assert(global.__localAppRoot, '"global.__localAppRoot" must be set when testing!');
+    assert(global.__fsRoot, '"global.__fsRoot" must be set when testing!');
   }
   else {
-    global.__localAppRoot = require.main.path;
+    // Set it to the folder of the main module, usually cwd
+    global.__fsRoot = require.main.path;
   }
 
+  // Set `getEnv` global
   global.__getEnv = getEnv
 
   // Standard config return, a list of [k,v] tuples
   return [
-    ['__localAppRoot', __localAppRoot],
     ['ALLOWED_ENVS', ALLOWED_ENVS.join(', ')],
     ['nodeEnv', nodeEnv],
-    ['dbRoot', process.env.DB_ROOT]
   ]
 
 }

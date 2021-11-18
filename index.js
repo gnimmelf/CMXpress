@@ -12,7 +12,7 @@ const {
 const assert = require('assert');
 const caller = require('caller');
 const { asValue } = require('awilix');
-const app = require('./src.server/app');
+const mainApp = require('./src.server/app');
 
 const DEFAULT_PORT = 3000;
 
@@ -81,11 +81,8 @@ function onListening() {
  * Export stuff needed to create client code.
  */
 
-module.exports = Object.assign(app.localApp, {
-  mainApp: app,
-
-  // TODO! Figure out what more to present to `localApp`? - Awilix-container + utils?
-
+module.exports = Object.assign(mainApp.localApp, {
+  mainApp,
   run: (options = {}) => {
 
     const { createServer } = {
@@ -95,10 +92,10 @@ module.exports = Object.assign(app.localApp, {
 
     const port = normalizePort(process.env.PORT || DEFAULT_PORT);
 
-    app.set('port', port);
+    mainApp.set('port', port);
 
     if (createServer) {
-      server = http.createServer(app);
+      server = http.createServer(mainApp);
       server.on('error', onError);
       server.on('listening', onListening);
       server.listen(port);
@@ -107,5 +104,6 @@ module.exports = Object.assign(app.localApp, {
 })
 
 if (require.main === module) {
+  // This package is not imported, but run from commandline
   module.exports.run()
 }

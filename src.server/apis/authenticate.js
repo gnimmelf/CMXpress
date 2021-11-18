@@ -13,7 +13,17 @@ module.exports = ({ authService, tokenKeyName }) => {
 
       authService.requestLoginCodeByEmail(req.body.email)
         .then(loginCode => {
-          sendApiResponse(res, { email: req.body.email })
+
+          const data = { email: req.body.email }
+
+          if (!__getEnv('prod')) {
+            data.loginCode = loginCode
+            if (!__getEnv('test')) {
+              console.log({ loginCode })
+            }
+          }
+
+          sendApiResponse(res, data)
         })
         .catch(err => {
           sendApiResponse(res, err)

@@ -5,19 +5,20 @@ const sh = require('shelljs');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 
-/**
- * Need to accuratly set the `__localAppRoot` that manifester depends on to `TARGET_DIR`
- * - So only way to do that is `global.__localAppRoot`, since `TARGET_DIR` is not known
- *   outside here, and there is no way of passing it programatically...
- */
-
 const SOURCE_DIR = join(__dirname, '../db.blueprint');
 const TARGET_DIR = join(osTmpdir(), 'mfs-site');
 
-global.__localAppRoot = TARGET_DIR;
+const INVALID_EMAIL = 'aaa@aaa.aaa'
+const VALID_EMAIL = 'gnimmelf@gmail.com'
+
+/**
+ * Need to accuratly set the `__fsRoot` that manifester depends on to `TARGET_DIR`
+ * - So only way to do that is `global.__fsRoot`, since `TARGET_DIR` is not known
+ *   outside here, and there is no way of passing it programatically...
+ */
+global.__fsRoot = TARGET_DIR;
 
 const manifester = require('../index');
-
 
 /**
  * Chai setup
@@ -41,47 +42,90 @@ manifester.run({
 
 const agent = chai.request.agent(manifester.mainApp)
 
-
 /*
   Paths
 */
-const paths = {
+const endpoints = {
+  appRoot: '/',
   inspect: '/api/inspect',
+  inspectText: '/api/inspect/toText',
+  inspectHtml: '/api/inspect/toHtml',
   currentUser: '/api/user/current',
   userList: '/api/user/list',
   schemaList: '/api/schema/list',
-
+  authRequest: '/api/auth/request',
 }
 
-describe('not logged in', () => {
+describe('Unauthenticated user', () => {
 
-  describe('200/Ok paths', () => {
-
+  describe('should have 200/OK at', () => {
     ([
+      'appRoot',
       'inspect',
+      'inspectText',
+      'inspectHtml',
       'schemaList',
     ])
-      .map(name => paths[name])
+      .map(name => endpoints[name])
       .forEach(path => {
-
-        it(paths.inspect, async () => {
-          const res = await agent.get(paths.inspect);
+        it(path, async () => {
+          const res = await agent.get(path);
           expect(res).to.have.status(200);
         });
+      });
+  });
 
+  describe('should have 401/UNAUTHORIZED at', () => {
+    ([
+      'currentUser',
+      'userList',
+    ])
+      .map(name => endpoints[name])
+      .forEach(path => {
+        it(path, async () => {
+          const res = await agent.get(path);
+          expect(res).to.have.status(401);
+        });
+      });
+  });
+
+  describe('loggin in', () => {
+
+    const endpoint = endpoints['authRequest']
+    let loginCode;
+
+    describe(`at ${endpoint} and`, () => {
+
+      describe('requests loginCode', () => {
+
+        it('posts without email => 422/UNPROCESSABLE_ENTITY', async () => {
+          const res = await agent
+            .post(endpoints['authRequest'])
+            .send({ email: INVALID_EMAIL })
+          expect(res).to.have.status(422);
+        })
+
+        it('posts with non-existing email => 422/UNPROCESSABLE_ENTITY', async () => {
+          const res = await agent.post(endpoints['authRequest']);
+          expect(res).to.have.status(422);
+        })
+
+        it('posts with valid email => 200/OK', async () => {
+          const res = await agent
+            .post(endpoints['authRequest'])
+            .send({ email: VALID_EMAIL })
+          expect(res).to.have.status(200)
+          expect(res.body.loginCode).to.be.a('string');
+
+          loginCode = res.body.loginCode
+        });
       });
 
-  });
+      describe('exchanges logincode for an auth token', () => { })
 
-  describe('401/Unauthorized paths', () => {
-
-    it(paths.currentUser, async () => {
-      const res = await agent.get(paths.currentUser)
-      expect(res).to.have.status(401);
+      describe('autheticates with auth-token', () => { })
     });
-
   });
-
 });
 /*
 ┌────────┬──────────────────────────────────────────────────────────────────┐
