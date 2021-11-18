@@ -42,11 +42,7 @@ module.exports = (app, { nodeEnv }) => {
     global.__fsRoot = require.main.path;
   }
 
-<<<<<<< HEAD
   // Set `getEnv` global
-=======
-  // Make getEnv globally accesiible
->>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
   global.__getEnv = getEnv
 
   // TODO! Assert required ENV-variables. `DB_ROOT`, `TOKEN_KEY`, `TOKEN_SECRET`, etc.

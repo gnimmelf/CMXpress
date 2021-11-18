@@ -31,22 +31,12 @@ module.exports = ({ dbService, templateService, mailService, objService }) => {
     requestLoginCodeByEmail: (email) => {
       return new Promise((resolve, reject) => {
 
-<<<<<<< HEAD
         const dbPath = maybeGetAuthPath(email);
-=======
-        const mapKey = maybeGetAuthPath(email);
->>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
 
         const loginCode = makeLoginCode(5);
         const siteSettings = objService.getSiteSettings();
 
-<<<<<<< HEAD
         userDb.set(dbPath, 'loginCode', loginCode);
-=======
-        debug({ siteSettings });
-
-        userDb.set(mapKey, 'loginCode', loginCode);
->>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
 
         templateService['mail-login-code']
           .render({

@@ -153,21 +153,10 @@ module.exports = ({ dbService, schemaService }) => {
       return schemaService.getSchema(schemaName, 'update', { owner, noAuth })
         .then(schema => {
 
-<<<<<<< HEAD
           const dbPath = (owner ? owner.userId + '/' : '') + (schemaNameSuffix || schemaName) + addFileExt('/' + objId);
 
           // Get object-clone from db
           const dbObj = dbService[dbKey].get(dbPath, { clone: true });
-=======
-          const mapKey = makeMapKey(
-            owner?.userId,
-            schemaNameSuffix || schemaName,
-            objId
-          );
-
-          // Get object-clone from db
-          const dbObj = dbService[dbKey].get(mapKey, { clone: true });
->>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
 
           // Check that it exists
           maybeThrow(!dbObj, `ObjId '${objId}' not found`, 404);
@@ -192,11 +181,7 @@ module.exports = ({ dbService, schemaService }) => {
           maybeThrow(!isValid, ajv.errors, 400);
 
           // Update Db
-<<<<<<< HEAD
           const success = dbService[dbKey].set(dbPath, data);
-=======
-          const success = dbService[dbKey].set(mapKey, data);
->>>>>>> 4647b9c0febfe4cb88e685d77e7072aa1880fe0c
           maybeThrow(!success, 'Could not update object', 424);
 
           // Write commits to disk
