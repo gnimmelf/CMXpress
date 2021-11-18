@@ -8,8 +8,8 @@
   },
   "scripts": {
     "test": "NODE_ENV=test LOG_LEVEL=error mocha --exit",
-    "start": "node start index.js",
-    "dev": "nodemon start index.js --ignore data"
+    "start": "node index.js",
+    "dev": "nodemon index.js --ignore data"
   },
   "bin": {
     "manifest-a-site": "generators/create-site/create-site.js"

@@ -11,7 +11,7 @@ const chaiHttp = require('chai-http');
  *   outside here, and there is no way of passing it programatically...
  */
 
-const SOURCE_DIR = join(__dirname, '../generators/create-site/templates');
+const SOURCE_DIR = join(__dirname, '../db.blueprint');
 const TARGET_DIR = join(osTmpdir(), 'mfs-site');
 
 global.__localAppRoot = TARGET_DIR;
@@ -25,7 +25,6 @@ const manifester = require('../index');
 
 chai.use(chaiHttp);
 const { expect } = chai;
-
 
 /**
  * Set up test app
@@ -62,15 +61,15 @@ describe('not logged in', () => {
       'inspect',
       'schemaList',
     ])
-    .map(name => paths[name])
-    .forEach(path => {
+      .map(name => paths[name])
+      .forEach(path => {
 
-      it(paths.inspect, async () => {
-        const res = await agent.get(paths.inspect);
-        expect(res).to.have.status(200);
+        it(paths.inspect, async () => {
+          const res = await agent.get(paths.inspect);
+          expect(res).to.have.status(200);
+        });
+
       });
-
-    });
 
   });
 

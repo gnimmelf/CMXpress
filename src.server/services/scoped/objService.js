@@ -12,16 +12,14 @@ const {
 
 module.exports = ({ dbService, schemaService }) => {
 
-  // TODO! Fixme, needs to be dynamic to reflect updates to the site-data...
-  const siteSettings = Object.freeze({
-    ...dbService.site.get('settings.public.json', { raw: true }),
-    ...dbService.site.get('settings.private.json', { raw: true }),
-  });
-
   return {
 
     getSiteSettings: (dottedPath = null) => {
       // NOTE! Direct access! -Only for internal use!
+      const siteSettings = {
+        ...dbService.site.get('settings.public.json', { raw: true }),
+        ...dbService.site.get('settings.private.json', { raw: true }),
+      };
       return dottedPath
         ? dotProp.get(siteSettings, dottedPath)
         : siteSettings
