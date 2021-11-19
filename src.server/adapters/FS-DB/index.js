@@ -27,23 +27,26 @@ const proxyHandler = {
 
 const logger = loggers.get('default');
 
-module.exports = deasync(async ({ dbRoot }) => {
+module.exports = deasync(async ({ fsRoot, dbPath }) => {
+
+    fsRootPath = join(fsRoot, dbPath)
+
     const dbs = await Promise.all([
         new Db({
-            root: ensureDir(join(dbRoot, 'schemas')),
+            root: ensureDir(join(fsRootPath, 'schemas')),
             name: 'schemas',
         }).promise,
         new Db({
-            root: ensureDir(join(dbRoot, 'site')),
+            root: ensureDir(join(fsRootPath, 'site')),
             name: 'site',
         }).promise,
         new Db({
-            root: ensureDir(join(dbRoot, 'users')),
+            root: ensureDir(join(fsRootPath, 'users')),
             name: 'users',
             instantPush: true,
         }).promise,
         new Db({
-            root: ensureDir(join(dbRoot, 'content')),
+            root: ensureDir(join(fsRootPath, 'content')),
             name: 'content',
         }).promise,
     ])

@@ -2,13 +2,13 @@ const debug = require('debug')('mf:middleware:authenticateHeaderToken');
 const { asValue, asFunction } = require('awilix');
 const { makeSingleInvoker, maybeThrow } = require('../lib/utils');
 
-module.exports = makeSingleInvoker(({ tokenKeyName, authService, userService }) => {
+module.exports = makeSingleInvoker(({ tokenKey, authService, userService }) => {
 
   return (req, res, next) => {
     debug("cookies", req.cookies)
 
     // Token can be passed as header or as cookie
-    let token = req.headers[tokenKeyName] || req.cookies[tokenKeyName];
+    let token = req.headers[tokenKey] || req.cookies[tokenKey];
 
     authService.authenticateToken(token)
       .then(decoded => {
@@ -22,8 +22,8 @@ module.exports = makeSingleInvoker(({ tokenKeyName, authService, userService }) 
       .catch(err => {
         debug('unauthenticated', err.message)
 
-        delete req.headers[tokenKeyName];
-        delete req.cookies[tokenKeyName];
+        delete req.headers[tokenKey];
+        delete req.cookies[tokenKey];
 
         next();
       });

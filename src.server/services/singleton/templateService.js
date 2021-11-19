@@ -50,7 +50,6 @@ module.exports = ({ app }) =>
 */ {
 
   const appDirs = extractAppDirs(app);
-  const localAppDirs = extractAppDirs(app.localApp);
 
   class Template {
     constructor({ name, filePath, ext, dir }) {
@@ -111,7 +110,7 @@ module.exports = ({ app }) =>
 
         debug(`Looking for template '${this.filePath}'`);
 
-        [localAppDirs, appDirs].every(obj => {
+        appDirs.every(obj => {
           obj.dirs.every(dir => {
             filePath = normalize(join(dir, this.filePath));
             stat = tryStat(filePath);

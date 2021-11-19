@@ -1,13 +1,15 @@
+const { join } = require('path');
 const { open } = require('lmdb-store');
 const {
     loggers,
     ensureDir,
 } = require('../utils');
 
-module.exports = ({ dbRoot }) => {
-    ensureDir(dbRoot)
+module.exports = ({ fsRoot, dbPath }) => {
 
-    const root = open(rootPath, {
+    ensureDir(fsRoot)
+
+    const root = open(join(fsRoot, dbPath), {
         name: 'root',
         dupSort: false,
         useVersions: false,

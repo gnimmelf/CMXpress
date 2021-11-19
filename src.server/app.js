@@ -19,105 +19,103 @@ const {
 
 const { loggers } = require('./lib/utils')
 
-/**
- * Express apps
- * Working with two apps;
- * - `app` - The main manifester app
- * - `localApp` - The exposed app for local development extending the main manifester app
- */
+const createApp = ({
+  fsRoot,
+}) => {
+  assert(fsRoot, 'Required')
 
-const app = express();
-app.localApp = express();
+  const app = express();
 
-/**
- * View engine setup
- * -Yes, pug/jade. Tried "all" others, they suck and really hamper coding effiency.
- */
+  /**
+   * Configurations
+   */
 
-app.set('views', [join(__dirname, 'views')]);
-app.set('view engine', 'pug');
-app.set('json spaces', 2);
+  const configLogs = {}; // For logging
 
-/**
- * Configurations
- */
+  // Node-env, INCLUDING GLOBALS!!
+  configLogs['env'] = configureAppEnv(app, {
+    nodeEnv: process.env.NODE_ENV || 'development',
+  });
 
-const configLogs = {}; // For logging
+  // Loggers
+  configLogs['logging'] = configureLogging(app, {
+    logLevel: process.env.LOG_LEVEL || 'debug',
+    logFileDir: join(fsRoot, '/logs/'),
+  });
 
-// Node-env, INCLUDING GLOBALS!!
-configLogs['env'] = configureAppEnv(app, {
-  nodeEnv: process.env.NODE_ENV || 'development',
-});
+  // Awilix-container, set on `app`
+  configLogs['container'] = configureContainer(app, {
+    fsRoot,
+  });
 
-// Loggers
-configLogs['logging'] = configureLogging(app, {
-  logLevel: process.env.LOG_LEVEL || 'debug',
-  logFileDir: join(global.__fsRoot, '/logs/'),
-});
+  /**
+   * Log configs
+   */
 
-// Awilix-container, set on `app`
-configLogs['container'] = configureContainer(app);
+  const logger = loggers.get('default');
 
-/**
- * Log configs
- */
+  Object.entries(configLogs).forEach(([category, configTuples]) => configTuples.forEach(([key, value]) => {
+    logger.verbose(`(${category.toUpperCase()}) ${key} = ${value}`);
+  }));
 
-const logger = loggers.get('default');
+  /**
+   * View engine setup
+   * -Yes, pug/jade. Tried "all" others, they suck and really hamper coding effiency.
+   */
 
-Object.entries(configLogs).forEach(([category, configTuples]) => configTuples.forEach(([key, value]) => {
-  logger.verbose(`(${category.toUpperCase()}) ${key} = ${value}`);
-}));
+  app.set('views', [join(__dirname, 'views'), join(fsRoot, 'views')]);
+  app.set('view engine', 'pug');
+  app.set('json spaces', 2);
 
-/**
- * Standard middleware
- */
+  /**
+   * Standard middleware
+   */
 
-// CORS
-// NOTE! The manifested `localApp` must set it's own CORS when in production (see `../index.js`)
-// TODO! CORS - Something weird with pure rest clients and new chrome cors policy
-const corsOptions = {
-  "origin": "*",
-  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-  "preflightContinue": false,
-  "optionsSuccessStatus": 204,
-  "credentials": true,
-};
-logger.info(`CORS ${JSON.stringify(corsOptions)}`)
-app.use(cors(corsOptions));
-
-
-// Encoding
-app.use(json());
-app.use(urlencoded({ extended: true }));
-app.use(cookieParser());
-
-// TODO! Favicon: uncomment after placing your favicon... where? -Should prefer `app.localApp`...
-//app.use(favicon(join("public", 'favicon.ico')));
-
-/**
- * Custom middleware
- */
-
-app.use(require('./middleware/authenticateHeaderToken'));
+  // CORS
+  // NOTE! The manifested `localApp` must set it's own CORS when in production (see `../index.js`)
+  // TODO! CORS - Something weird with pure rest clients and new chrome cors policy
+  const corsOptions = {
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204,
+    "credentials": true,
+  };
+  logger.info(`CORS ${JSON.stringify(corsOptions)}`)
+  app.use(cors(corsOptions));
 
 
-/**
- * Routes
- */
+  // Encoding
+  app.use(json());
+  app.use(urlencoded({ extended: true }));
+  app.use(cookieParser());
 
-app.use('/api', require('./routes/api.inspect'));
-app.use('/api/auth', require('./routes/api.authenticate'));
-app.use('/api/schemas', require('./routes/api.schemas'));
-app.use('/api/users', require('./routes/api.users'));
-app.use('/api/content', require('./routes/api.content'));
-app.use('/api/site', require('./routes/api.site'));
-app.use(app.localApp); // Mount the `localApp` last, so that all its routes apply
+  // TODO! Favicon: uncomment after placing your favicon... where? -Should prefer `app.localApp`...
+  //app.use(favicon(join("public", 'favicon.ico')));
+
+  /**
+   * Custom middleware
+   */
+
+  app.use(require('./middleware/authenticateHeaderToken'));
 
 
-/**
- * Downstream errorhandling
- */
+  /**
+   * Routes
+   */
 
-configureErrorHandling(app)
+  app.use('/', require('./routes/api.inspect'));
+  app.use('/auth', require('./routes/api.authenticate'));
+  app.use('/schemas', require('./routes/api.schemas'));
+  app.use('/users', require('./routes/api.users'));
+  app.use('/content', require('./routes/api.content'));
+  app.use('/site', require('./routes/api.site'));
 
-module.exports = app;
+  /**
+   * Downstream errorhandling
+   */
+
+  configureErrorHandling(app)
+}
+
+module.exports = createApp;

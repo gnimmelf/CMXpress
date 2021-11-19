@@ -9,17 +9,15 @@ const {
 
 const AUTH_FILE = 'auth.json';
 
-const hashSecret = process.env.TOKEN_SECRET
-
-module.exports = ({ dbService, templateService, mailService, objService }) => {
-  // NOTE! `userService` is too high-level to use for authentification!
+module.exports = ({ dbService, templateService, mailService, objService, tokenSecret }) => {
+  // NOTE! Using `userDB` because `userService` is too high-level to use for authentification...
   const userDb = dbService.user;
 
   const maybeGetAuthPath = (email) => {
     const node = userDb.jsonPath(`$[*]['user.json']`)
       .find(node => node.value.email == email);
 
-    maybeThrow(!node, 'No user found by given email', 422);
+    maybeThrow(!node, `No user found by given email (${email})`, 422);
 
     const userId = node.path[1]
 
@@ -76,7 +74,7 @@ module.exports = ({ dbService, templateService, mailService, objService }) => {
         userDb.set(dbPath, 'loginCode', '');
 
         // Create new token
-        const authToken = jwt.sign({ email: email, salt: makeLoginCode(20) }, hashSecret);
+        const authToken = jwt.sign({ email: email, salt: makeLoginCode(20) }, tokenSecret);
         userDb.set(dbPath, 'authToken', authToken);
 
         resolve(authToken)
@@ -89,7 +87,7 @@ module.exports = ({ dbService, templateService, mailService, objService }) => {
 
         maybeThrow(!token, 'No token passed', 422);
 
-        const decoded = jwt.verify(token, hashSecret);
+        const decoded = jwt.verify(token, tokenSecret);
 
         const dbPath = maybeGetAuthPath(decoded.email);
 

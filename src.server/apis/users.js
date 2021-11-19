@@ -7,7 +7,7 @@ const {
   throwNotImplemented,
 } = require('../lib/utils');
 
-module.exports = ({ userService, authService, objService, tokenKeyName }) => {
+module.exports = ({ userService, authService, objService, tokenKey }) => {
 
   const getUserByHandle = (handle) => {
     return new Promise((resolve) => {
@@ -72,11 +72,11 @@ module.exports = ({ userService, authService, objService, tokenKeyName }) => {
     },
 
     invalidateSession: (req, res) => {
-      var token = req.params.token || req.cookies[tokenKeyName];
+      var token = req.params.token || req.cookies[tokenKey];
 
       authService.authenticateToken(token)
         .then(decoded => {
-          res.clearCookie(tokenKeyName);
+          res.clearCookie(tokenKey);
           return authService.invalidateToken(decoded.email);
         })
         .then(payload => {

@@ -4,7 +4,7 @@ const {
   sendApiResponse
 } = require('../lib/utils');
 
-module.exports = ({ authService, tokenKeyName }) => {
+module.exports = ({ authService, tokenKey }) => {
 
 
   return {
@@ -35,11 +35,11 @@ module.exports = ({ authService, tokenKeyName }) => {
 
       authService.exchangeLoginCode2Token(req.body.email, req.body.code)
         .then(payload => {
-          res.cookie(tokenKeyName, payload, {
+          res.cookie(tokenKey, payload, {
             httpOnly: true,
             sameSite: "Strict"
           })
-          sendApiResponse(res, { cookieName: tokenKeyName })
+          sendApiResponse(res, { cookieName: tokenKey })
         })
         .catch(err => {
           sendApiResponse(res, err)

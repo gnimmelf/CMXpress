@@ -2,17 +2,8 @@
  * Export the Manifester app.
  */
 const http = require('http');
-const {
-  join,
-  dirname,
-  resolve,
-  parse
-} = require('path');
-
 const assert = require('assert');
-const caller = require('caller');
-const { asValue } = require('awilix');
-const mainApp = require('./src.server/app');
+const createApp = require('./src.server/app')
 
 const DEFAULT_PORT = 3000;
 
@@ -77,33 +68,32 @@ function onListening() {
   console.log('\nListening on ' + bind);
 }
 
+
+function getApp({ fsRoot } = {}) {
+  fsRoot = fsRoot || require.main.path
+  return createApp({ fsRoot })
+}
+
+function serve(app) {
+  const port = normalizePort(process.env.PORT || DEFAULT_PORT);
+  server = http.createServer(app);
+  server.on('error', onError);
+  server.on('listening', onListening);
+  server.listen(port);
+}
+
 /**
  * Export stuff needed to create client code.
  */
 
-module.exports = Object.assign(mainApp.localApp, {
-  mainApp,
-  run: (options = {}) => {
-
-    const { createServer } = {
-      createServer: true,
-      ...options,
-    }
-
-    const port = normalizePort(process.env.PORT || DEFAULT_PORT);
-
-    mainApp.set('port', port);
-
-    if (createServer) {
-      server = http.createServer(mainApp);
-      server.on('error', onError);
-      server.on('listening', onListening);
-      server.listen(port);
-    }
-  },
-})
 
 if (require.main === module) {
   // This package is not imported, but run from commandline
-  module.exports.run()
+  serve(getApp())
+}
+else {
+  module.exports = {
+    serve,
+    getApp,
+  }
 }

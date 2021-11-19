@@ -15,16 +15,17 @@ const {
 const { scopePerRequest } = require('awilix-express');
 const { join } = require('path');
 
-module.exports = (app) => {
-
-  assert(app, 'required!')
-
+module.exports = (app, {
+  fsRoot
+}) => {
   const container = createContainer();
 
   container.register({
     'app': asValue(app),
-    'tokenKeyName': asValue(process.env.TOKEN_KEY),
-    'dbRoot': asValue(process.env.DB_ROOT),
+    'fsRoot': asValue(fsRoot),
+    'dbPath': asValue(process.env.DB_PATH),
+    'tokenKey': asValue(process.env.TOKEN_KEY),
+    'tokenSecret': asValue(process.env.TOKEN_SECRET),
     'nodemailerTransport': asValue({
       host: 'smtp.ethereal.email',
       port: 587,

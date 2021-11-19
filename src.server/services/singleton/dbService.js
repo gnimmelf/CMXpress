@@ -3,9 +3,10 @@ const assert = require('assert');
 const dbAdapter = require('../../adapters/FS-DB');
 const { join } = require('path');
 
-module.exports = ({ dbRoot }) => {
+module.exports = ({ fsRoot, dbPath }) => {
   const dbService = dbAdapter({
-    dbRoot: join(__fsRoot, dbRoot)
+    fsRoot,
+    dbPath,
   })
 
     // Do a light "interface-check"

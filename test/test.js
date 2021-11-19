@@ -2,21 +2,18 @@ const { join } = require('path');
 const osTmpdir = require('os-tmpdir');
 const sh = require('shelljs');
 
+const express = require('express');
+
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 
 const SOURCE_DIR = join(__dirname, '../db.blueprint');
-const TARGET_DIR = join(osTmpdir(), 'mfs-site');
+const TMP_DIR = join(osTmpdir(), 'mfs-site');
+
+console.log({ TMP_DIR })
 
 const INVALID_EMAIL = 'aaa@aaa.aaa'
 const VALID_EMAIL = 'gnimmelf@gmail.com'
-
-/**
- * Need to accuratly set the `__fsRoot` that manifester depends on to `TARGET_DIR`
- * - So only way to do that is `global.__fsRoot`, since `TARGET_DIR` is not known
- *   outside here, and there is no way of passing it programatically...
- */
-global.__fsRoot = TARGET_DIR;
 
 const manifester = require('../index');
 
@@ -31,16 +28,19 @@ const { expect } = chai;
  * Set up test app
  */
 
-sh.rm('-rf', TARGET_DIR);
-sh.mkdir(TARGET_DIR);
-sh.cp('-R', `${SOURCE_DIR}/*`, TARGET_DIR);
+sh.rm('-rf', TMP_DIR);
+sh.mkdir(TMP_DIR);
+sh.cp('-R', `${SOURCE_DIR}/*`, TMP_DIR);
 
-manifester.use('/', (req, res) => res.send('Test App\n'));
-manifester.run({
-  createServer: false,
-});
 
-const agent = chai.request.agent(manifester.mainApp)
+const localApp = express()
+localApp.use('/', (req, res) => res.send('Test App\n'));
+localApp.use('/api', manifester.getApp({ fsRoot: TMP_DIR }))
+manifester.serve(localApp)
+
+
+
+const agent = chai.request.agent(localApp)
 
 /*
   sections
@@ -65,6 +65,8 @@ describe('Unauthenticated user', () => {
       'inspectText',
       'inspectHtml',
       'schemaList',
+      'userList',
+      'currentUser',
     ])
       .map(name => endpoints[name])
       .forEach(path => {
@@ -77,8 +79,7 @@ describe('Unauthenticated user', () => {
 
   describe('should have 401/UNAUTHORIZED at', () => {
     ([
-      'currentUser',
-      'userList',
+
     ])
       .map(name => endpoints[name])
       .forEach(path => {
@@ -114,6 +115,7 @@ describe('Unauthenticated user', () => {
           const res = await agent
             .post(endpoints['authRequest'])
             .send({ email: VALID_EMAIL })
+
           expect(res).to.have.status(200)
           expect(res.body.loginCode).to.be.a('string');
 

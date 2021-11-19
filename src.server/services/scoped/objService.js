@@ -23,8 +23,8 @@ module.exports = ({ dbService, schemaService }) => {
         ...dbService.site.get('settings.public.json', { raw: true }),
         ...dbService.site.get('settings.private.json', { raw: true }),
       };
-      return dottedPath
-        ? dotProp.get(siteSettings, dottedPath)
+      return propPath
+        ? dotProp.get(siteSettings, propPath)
         : siteSettings
     },
 
@@ -56,7 +56,7 @@ module.exports = ({ dbService, schemaService }) => {
 
           debug('getObj', dbPath);
 
-          const data = dbService[dbKey].get(dbPath, dottedPath, { raw: !!parseInt(raw) });
+          const data = dbService[dbKey].get(dbPath, propPath, { raw: !!parseInt(raw) });
 
           maybeThrow(!data, `ObjId '${objId}' not found`, 404);
 
@@ -184,7 +184,7 @@ module.exports = ({ dbService, schemaService }) => {
           }
 
           // Update Db
-          const success = dbService[dbKey].delete(dbPath, dottedPath);
+          const success = dbService[dbKey].delete(dbPath, propPath);
           maybeThrow(!success, 'Could not delete object', 424);
 
           // Write commits to disk
