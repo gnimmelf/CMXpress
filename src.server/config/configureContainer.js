@@ -52,10 +52,7 @@ module.exports = (app, {
    * Register `templateService & default templates
    */
   const templateService = container.resolve('templateService');
-
-  ;[
-    'mail-login-code.pug',
-  ].forEach(templateService.set);
+  templateService['mail-login-code'] = join(__dirname, '../views', 'mail-login-code.pug');
 
   app.set('container', container);
   app.use(scopePerRequest(container));

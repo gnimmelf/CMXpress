@@ -87,15 +87,21 @@ module.exports = ({ dbService, templateService, mailService, objService, tokenSe
 
         maybeThrow(!token, 'No token passed', 422);
 
-        const decoded = jwt.verify(token, tokenSecret);
+        let decoded;
+        try {
+          decoded = jwt.verify(token, tokenSecret);
+        } catch (err) {
+          maybeThrow(true, err.message, 422)
+        }
 
         const dbPath = maybeGetAuthPath(decoded.email);
 
         const authData = userDb.get(dbPath);
 
-        maybeThrow(!authData, 'Token not found', 404)
-        maybeThrow(!authData.authToken, 'No matching token found', 401)
-        maybeThrow(authData.authToken != token, 'Token mismatch', 401)
+        const validToken = authData?.authToken === token
+
+        maybeThrow(!validToken, 'Invalid token', 422)
+
         // TODO! Implement other security measures!
         // https://github.com/auth0/node-jsonwebtoken
 

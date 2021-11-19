@@ -9,7 +9,7 @@
   "scripts": {
     "test": "NODE_ENV=test LOG_LEVEL=error mocha --exit --trace-warnings",
     "start": "node index.js",
-    "dev": "nodemon index.js --ignore data"
+    "dev": "nodemon index.js --ignore db.data"
   },
   "bin": {
     "manifest-a-site": "generators/create-site/create-site.js"

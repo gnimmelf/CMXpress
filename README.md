@@ -62,10 +62,8 @@ NOTE! See the individual routes for more examples.
 ```
 http --session=~/tmp/session.json :3000/api/user/current
 http --session=~/tmp/session.json POST :3000/api/auth/request email=gnimmelf@gmail.com
-// Extract code from reponse
+// Extract <CODE> from reponse
 http --session=~/tmp/session.json POST :3000/api/auth/exchange email=gnimmelf@gmail.com code=<CODE>
 http --session=~/tmp/session.json :3000/api/user/current
 http --session=~/tmp/session.json :3000/api/auth/logout
-
-http --session=~/tmp/session.json :3000/api/data/
 ```

@@ -7,6 +7,7 @@ const api = makeInvoker(require('../../apis/authenticate'));
 
 router.post('/request', api('requestLoginCodeByEmail'));
 router.post('/exchange', api('exchangeLoginCode2Token'));
+// TODO! Is exposing `api('authenticateToken')` dangerous?
 router.post('/authenticate', api('authenticateToken'));
 
 

@@ -72,7 +72,7 @@ module.exports = ({ userService, authService, objService, tokenKey }) => {
     },
 
     invalidateSession: (req, res) => {
-      var token = req.params.token || req.cookies[tokenKey];
+      var token = req.body.taken || req.params.token || req.cookies[tokenKey];
 
       authService.authenticateToken(token)
         .then(decoded => {

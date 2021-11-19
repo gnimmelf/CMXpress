@@ -6,6 +6,8 @@ const assert = require('assert');
 
 const createApp = require('./src.server/app')
 
+require('dotenv').config()
+
 const DEFAULT_PORT = 3000;
 
 // Server

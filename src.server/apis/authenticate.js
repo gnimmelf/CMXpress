@@ -3,6 +3,7 @@ const debug = require('debug')('mf:api:authenticate');
 const {
   sendApiResponse
 } = require('../lib/utils');
+const authenticateHeaderToken = require('../middleware/authenticateHeaderToken');
 
 module.exports = ({ authService, tokenKey }) => {
 
@@ -47,11 +48,13 @@ module.exports = ({ authService, tokenKey }) => {
     },
 
     authenticateToken: (req, res) => {
-      var token = req.params.token;
+      const token = req.body.token;
+
+      debug('authenticateHeaderToken', { token })
 
       authService.authenticateToken(token)
-        .then(payload => {
-          sendApiResponse(res, payload);
+        .then(({ email }) => {
+          sendApiResponse(res, { email });
         })
         .catch(err => {
           sendApiResponse(res, err)

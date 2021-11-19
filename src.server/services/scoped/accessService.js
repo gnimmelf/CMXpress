@@ -11,6 +11,8 @@ module.exports = ({ dbService }) => {
 
   const accessGroups = dbService.site.get('groups.json');
 
+  debug('accessGroups', accessGroups)
+
   const parseUser = (user) => user && user[IS_PARSED] ? user : ({
     id: user?.userId || false,
     groups: user?.groups || [],

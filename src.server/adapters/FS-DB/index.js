@@ -1,3 +1,4 @@
+const debug = require('debug')('mf:adapters');
 const jsonPath = require('jsonpath');
 const { join } = require('path');
 const Db = require('./FS-DB');
@@ -30,6 +31,8 @@ const logger = loggers.get('default');
 module.exports = deasync(async ({ fsRoot, dbPath }) => {
 
     fsRootPath = join(fsRoot, dbPath)
+
+    debug('fsRootPath', fsRootPath)
 
     const dbs = await Promise.all([
         new Db({

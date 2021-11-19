@@ -8,8 +8,6 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { urlencoded, json } = require('body-parser');
 
-require('dotenv').config()
-
 const {
   configureAppEnv,
   configureLogging,
@@ -64,7 +62,7 @@ const createApp = ({
    * -Yes, pug/jade. Tried "all" others, they suck and really hamper coding effiency.
    */
 
-  app.set('views', [join(__dirname, 'views'), join(fsRoot, 'views')]);
+  app.set('views', [join(__dirname, 'views')]);
   app.set('view engine', 'pug');
   app.set('json spaces', 2);
 

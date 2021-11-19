@@ -15,11 +15,11 @@ router.get('/logout', api('invalidateSession'));
 router.post('/register', api('registerUser'));
 router.post('/update/:userHandle', api('updateUser'));
 
-// User-data
-router.get('/:userHandle/data/:schemaNameSuffix/list', api('getObjectIds'));
-router.get('/:userHandle/data/:schemaNameSuffix/:objId', api('getObj'));
-router.post('/:userHandle/data/:schemaNameSuffix/:objId/:propPath?', api('setObj'));
-router.delete('/:userHandle/data/:schemaNameSuffix/:objId/:propPath?', api('deleteObj'));
+// User-content
+router.get('/:userHandle/content/:schemaNameSuffix/list', api('getObjectIds'));
+router.get('/:userHandle/content/:schemaNameSuffix/:objId', api('getObj'));
+router.post('/:userHandle/content/:schemaNameSuffix/:objId/:propPath?', api('setObj'));
+router.delete('/:userHandle/content/:schemaNameSuffix/:objId/:propPath?', api('deleteObj'));
 
 module.exports = router;
 
@@ -27,6 +27,6 @@ module.exports = router;
 http --session=~/tmp/session.json POST :3000/api/user/register email=gnimmelf@gmail.com
 http --session=~/tmp/session.json GET :3000/api/user/current
 http --session=~/tmp/session.json GET :3000/api/user/logout
-http --session=~/tmp/session.json GET :3000/api/user/gnimmelf/data/blog/list
-http --session=~/tmp/session.json GET :3000/api/user/gnimmelf/data/blog/a-test
+http --session=~/tmp/session.json GET :3000/api/user/gnimmelf/content/blog/list
+http --session=~/tmp/session.json GET :3000/api/user/gnimmelf/content/blog/a-test
 */
