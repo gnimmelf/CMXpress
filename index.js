@@ -3,6 +3,7 @@
  */
 const http = require('http');
 const assert = require('assert');
+
 const createApp = require('./src.server/app')
 
 const DEFAULT_PORT = 3000;
@@ -69,9 +70,12 @@ function onListening() {
 }
 
 
-function getApp({ fsRoot } = {}) {
+function getApp({ fsRoot, apiPrefix } = {}) {
   fsRoot = fsRoot || require.main.path
-  return createApp({ fsRoot })
+  apiPrefix = apiPrefix || ''
+  return createApp({
+    fsRoot, apiPrefix
+  })
 }
 
 function serve(app) {
@@ -89,7 +93,7 @@ function serve(app) {
 
 if (require.main === module) {
   // This package is not imported, but run from commandline
-  serve(getApp())
+  serve(getApp({ apiPrefix: '/api' }))
 }
 else {
   module.exports = {

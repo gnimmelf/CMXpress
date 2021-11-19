@@ -21,6 +21,7 @@ const { loggers } = require('./lib/utils')
 
 const createApp = ({
   fsRoot,
+  apiPrefix,
 }) => {
   assert(fsRoot, 'Required')
 
@@ -104,18 +105,20 @@ const createApp = ({
    * Routes
    */
 
-  app.use('/', require('./routes/api.inspect'));
-  app.use('/auth', require('./routes/api.authenticate'));
-  app.use('/schemas', require('./routes/api.schemas'));
-  app.use('/users', require('./routes/api.users'));
-  app.use('/content', require('./routes/api.content'));
-  app.use('/site', require('./routes/api.site'));
+  app.use(`${apiPrefix}/`, require('./routes/api.inspect'));
+  app.use(`${apiPrefix}/auth`, require('./routes/api.authenticate'));
+  app.use(`${apiPrefix}/schemas`, require('./routes/api.schemas'));
+  app.use(`${apiPrefix}/users`, require('./routes/api.users'));
+  app.use(`${apiPrefix}/content`, require('./routes/api.content'));
+  app.use(`${apiPrefix}/site`, require('./routes/api.site'));
 
   /**
    * Downstream errorhandling
    */
 
   configureErrorHandling(app)
+
+  return app;
 }
 
 module.exports = createApp;

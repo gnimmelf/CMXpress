@@ -34,11 +34,9 @@ sh.cp('-R', `${SOURCE_DIR}/*`, TMP_DIR);
 
 
 const localApp = express()
-localApp.use('/', (req, res) => res.send('Test App\n'));
 localApp.use('/api', manifester.getApp({ fsRoot: TMP_DIR }))
+localApp.use('/', (req, res) => res.send('Test App\n'));
 manifester.serve(localApp)
-
-
 
 const agent = chai.request.agent(localApp)
 
@@ -51,8 +49,8 @@ const endpoints = {
   inspectText: '/api/inspect/toText',
   inspectHtml: '/api/inspect/toHtml',
   currentUser: '/api/user/current',
-  userList: '/api/user/list',
-  schemaList: '/api/schema/list',
+  userList: '/api/users/list',
+  schemaList: '/api/schemas/list',
   authRequest: '/api/auth/request',
 }
 
@@ -65,8 +63,6 @@ describe('Unauthenticated user', () => {
       'inspectText',
       'inspectHtml',
       'schemaList',
-      'userList',
-      'currentUser',
     ])
       .map(name => endpoints[name])
       .forEach(path => {
@@ -79,7 +75,8 @@ describe('Unauthenticated user', () => {
 
   describe('should have 401/UNAUTHORIZED at', () => {
     ([
-
+      'userList',
+      'currentUser',
     ])
       .map(name => endpoints[name])
       .forEach(path => {
@@ -92,7 +89,7 @@ describe('Unauthenticated user', () => {
 
   describe('loggin in', () => {
 
-    const endpoint = endpoints['authRequest']
+    let endpoint = endpoints['authRequest']
     let loginCode;
 
     describe(`at ${endpoint} and`, () => {
@@ -101,26 +98,31 @@ describe('Unauthenticated user', () => {
 
         it('posts without email => 422/UNPROCESSABLE_ENTITY', async () => {
           const res = await agent
-            .post(endpoints['authRequest'])
-            .send({ email: INVALID_EMAIL })
+            .post(endpoint)
+            .send({})
+
+          // console.log({ res })
+
           expect(res).to.have.status(422);
         })
 
-        it('posts with non-existing email => 422/UNPROCESSABLE_ENTITY', async () => {
-          const res = await agent.post(endpoints['authRequest']);
-          expect(res).to.have.status(422);
-        })
+        // it('posts with invalid email => 422/UNPROCESSABLE_ENTITY', async () => {
+        //   const res = await agent
+        //     .post(endpoint)
+        //     .send({ email: INVALID_EMAIL })
+        //   expect(res).to.have.status(422);
+        // })
 
-        it('posts with valid email => 200/OK', async () => {
-          const res = await agent
-            .post(endpoints['authRequest'])
-            .send({ email: VALID_EMAIL })
+        // it('posts with valid email => 200/OK', async () => {
+        //   const res = await agent
+        //     .post(endpoint)
+        //     .send({ email: VALID_EMAIL })
 
-          expect(res).to.have.status(200)
-          expect(res.body.loginCode).to.be.a('string');
+        //   expect(res).to.have.status(200)
+        //   expect(res.body.loginCode).to.be.a('string');
 
-          loginCode = res.body.loginCode
-        });
+        //   loginCode = res.body.loginCode
+        // });
       });
 
       describe('exchanges logincode for an auth token', () => { })
