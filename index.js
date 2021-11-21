@@ -11,7 +11,7 @@ require('dotenv').config()
 const DEFAULT_PORT = 3000;
 
 // Server
-let server;
+let server, port;
 
 function normalizePort(val)
 // Get port from environment and store in Express.
@@ -81,7 +81,7 @@ function getApp({ fsRoot, apiPrefix } = {}) {
 }
 
 function serve(app) {
-  const port = normalizePort(process.env.PORT || DEFAULT_PORT);
+  port = normalizePort(process.env.PORT || DEFAULT_PORT);
   server = http.createServer(app);
   server.on('error', onError);
   server.on('listening', onListening);
