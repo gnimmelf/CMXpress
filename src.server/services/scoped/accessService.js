@@ -6,12 +6,11 @@ const {
 } = require('../../lib/utils');
 
 const IS_PARSED = Symbol('parsed');
+const ACCESS_GROUPS_PATH = 'groups.json';
 
 module.exports = ({ dbService }) => {
 
-  const accessGroups = dbService.site.get('groups.json');
-
-  debug('accessGroups', accessGroups)
+  const accessGroups = dbService.site.get(ACCESS_GROUPS_PATH);
 
   debug('accessGroups', accessGroups)
 

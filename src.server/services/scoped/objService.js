@@ -11,6 +11,9 @@ const {
   makeMapKey,
 } = require('../../lib/utils');
 
+const PUBLIC_SETTINGS_PATH = 'settings.public.json'
+const PRIVATE_SETTINGS_PATH = 'settings.private.json'
+
 module.exports = ({ dbService, schemaService }) => {
 
 
@@ -24,8 +27,8 @@ module.exports = ({ dbService, schemaService }) => {
     getSiteSettings: (propPath = null) => {
       // NOTE! Direct access! -Only for internal use!
       const siteSettings = {
-        ...dbService.site.get('settings.public.json', { primitivesAsObj: false }),
-        ...dbService.site.get('settings.private.json', { primitivesAsObj: false }),
+        ...dbService.site.get(PUBLIC_SETTINGS_PATH, { primitivesAsObj: false }),
+        ...dbService.site.get(PRIVATE_SETTINGS_PATH, { primitivesAsObj: false }),
       };
       return propPath
         ? dotProp.get(siteSettings, propPath)

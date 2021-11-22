@@ -6,6 +6,8 @@ const assert = require('assert');
 const USERID = Symbol('userId');
 const GROUPS = Symbol('groups');
 
+const AUTH_PATH = 'auth.json';
+const USER_PATH = 'user.json';
 const JSON_PATH_USERS = "$[*]['user.json']"
 
 module.exports = ({ dbService }) => {
@@ -18,7 +20,7 @@ module.exports = ({ dbService }) => {
   class User {
     constructor(userId) {
       this[USERID] = userId;
-      Object.assign(this, userDb.get(join(userId, 'user.json')));
+      Object.assign(this, userDb.get(join(userId, USER_PATH)));
     }
 
     get userId() {
@@ -27,7 +29,7 @@ module.exports = ({ dbService }) => {
 
     get groups() {
       if (!this[GROUPS]) {
-        const groups = userDb.get(join(this[USERID], 'auth.json'), 'groups');
+        const groups = userDb.get(join(this[USERID], AUTH_PATH), 'groups');
 
         console.log({ groups })
 

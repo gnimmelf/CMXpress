@@ -24,7 +24,6 @@ const makeDotPath = (path) => {
 const dotJoin = (...parts) => parts.filter(x => x).join('.').replace('..', '.');
 const stringify = (obj, prettify = true) => (prettify ? JSON.stringify(obj, null, 2) : JSON.stringify(obj));
 
-
 const updateTreePath = (absPath, instance) => {
   try {
     const content = JSON.parse(fs.readFileSync(absPath));
@@ -36,12 +35,10 @@ const updateTreePath = (absPath, instance) => {
   }
 }
 
-
 const deleteTreePath = (absPath, instance) => {
   const dotPropKey = makeDotPath(absPath);
   dotProp.delete(tree, dotPropKey);
 }
-
 
 const addCommit = ({ instance, action, absPath }) => {
   instance.commits.push({
@@ -57,7 +54,6 @@ const addCommit = ({ instance, action, absPath }) => {
   }
 
 }
-
 
 const pushCommits = (instance) => {
 
@@ -103,6 +99,7 @@ class Db {
     watchArgs = Object.assign({
       // https://www.npmjs.com/package/chokidar#api
       persistent: true,
+      // NOTE! Ignores files (and schemas) starting with '.'
       ignored: /(^|[\/\\])\../,
       ignoreInitial: false,
       followSymlinks: false,

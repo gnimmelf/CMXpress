@@ -7,7 +7,7 @@ const {
   logger,
 } = require('../../lib/utils');
 
-const AUTH_FILE = 'auth.json';
+const AUTH_PATH = 'auth.json';
 
 module.exports = ({ dbService, templateService, mailService, objService, tokenSecret }) => {
   // NOTE! Using `userDB` because `userService` is too high-level to use for authentification...
@@ -21,7 +21,7 @@ module.exports = ({ dbService, templateService, mailService, objService, tokenSe
 
     const userId = node.path[1]
 
-    return join(userId, AUTH_FILE);
+    return join(userId, AUTH_PATH);
   }
 
   return {
