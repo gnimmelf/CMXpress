@@ -13,50 +13,54 @@ const {
 
 module.exports = ({ dbService, schemaService }) => {
 
-  return {
 
-    makeMapKey,
+  const makeObjPath = () => {
+
+  }
+
+
+  return {
 
     getSiteSettings: (propPath = null) => {
       // NOTE! Direct access! -Only for internal use!
       const siteSettings = {
-        ...dbService.site.get('settings.public.json', { raw: true }),
-        ...dbService.site.get('settings.private.json', { raw: true }),
+        ...dbService.site.get('settings.public.json', { primitivesAsObj: false }),
+        ...dbService.site.get('settings.private.json', { primitivesAsObj: false }),
       };
       return propPath
         ? dotProp.get(siteSettings, propPath)
         : siteSettings
     },
 
-    getObjectIds: (dbKey, { schemaNameSuffix }, { owner = null, noAuth = false } = {}) => {
-      debug('getObjectIds', { dbKey, schemaNameSuffix, owner })
+    getObjectIds: (mapKey, { schemaPath }, { owner = null, noAuth = false } = {}) => {
+      debug('getObjectIds', { mapKey, schemaPath, owner })
 
-      const schemaName = makeSchemaName(dbKey, schemaNameSuffix);
+      const schemaName = makeSchemaName(mapKey, schemaPath);
 
       return schemaService.getSchema(schemaName, 'read', { owner, noAuth })
         .then(schema => {
 
-          const dbPath = (owner ? owner.userId + '/' : '') + schemaNameSuffix;
+          const dbPath = (owner ? owner.userId + '/' : '') + schemaPath;
 
-          const data = dbService[dbKey].get(dbPath);
+          const data = dbService[mapKey].get(dbPath);
 
           return data ? Object.keys(data) : [];
         });
     },
 
-    getObj: (dbKey, { schemaNameSuffix, objId, propPath, raw }, { owner = null, noAuth = false } = {}) => {
-      debug('getObj >', { dbKey, schemaNameSuffix, objId, propPath, owner });
+    getObj: (mapKey, { schemaPath, objId, propPath }, { owner = null, noAuth = false } = {}) => {
+      debug('getObj >', { mapKey, schemaPath, objId, propPath, owner });
 
-      const schemaName = makeSchemaName(dbKey, schemaNameSuffix);
+      const schemaName = makeSchemaName(mapKey, schemaPath);
 
       return schemaService.getSchema(schemaName, 'read', { owner, noAuth })
         .then(schema => {
 
-          const dbPath = (owner ? owner.userId + '/' : '') + (schemaNameSuffix || schemaName) + (objId ? addFileExt('/' + objId) : '');
+          const dbPath = (owner ? owner.userId + '/' : '') + (schemaPath || schemaName) + (objId ? addFileExt('/' + objId) : '');
 
           debug('getObj', dbPath);
 
-          const data = dbService[dbKey].get(dbPath, propPath, { raw: !!parseInt(raw) });
+          const data = dbService[mapKey].get(dbPath, propPath);
 
           maybeThrow(!data, `ObjId '${objId}' not found`, 404);
 
@@ -64,10 +68,10 @@ module.exports = ({ dbService, schemaService }) => {
         });
     },
 
-    createObj: (dbKey, data, { schemaNameSuffix } = {}, { owner = null, noAuth = false } = {}) => {
-      debug('createObj >', { data, dbKey, schemaNameSuffix, owner, noAuth });
+    createObj: (mapKey, data, { schemaPath } = {}, { owner = null, noAuth = false } = {}) => {
+      debug('createObj >', { data, mapKey, schemaPath, owner, noAuth });
 
-      const schemaName = makeSchemaName(dbKey, schemaNameSuffix);
+      const schemaName = makeSchemaName(mapKey, schemaPath);
 
       return schemaService.getSchema(schemaName, 'create', { owner, noAuth })
         .then(schema => {
@@ -82,19 +86,19 @@ module.exports = ({ dbService, schemaService }) => {
           const objId = slug(idPropertyValue.toLowerCase());
           maybeThrow(!objId, `Expected "${schema.idProperty}" to create objId`, 400);
 
-          const dbPath = (owner ? owner.userId + '/' : '') + (schemaNameSuffix || schemaName) + addFileExt('/' + objId);
+          const dbPath = (owner ? owner.userId + '/' : '') + (schemaPath || schemaName) + addFileExt('/' + objId);
 
           debug('createObj >', { schemaName, idProperty: schema.idProperty, idPropertyValue, dbPath })
 
           // Check if `objId` already exists
-          maybeThrow(dbService[dbKey].get(dbPath), `objId '${idPropertyValue}' already exists`, 400);
+          maybeThrow(dbService[mapKey].get(dbPath), `objId '${idPropertyValue}' already exists`, 400);
 
           // Update Db
-          const success = dbService[dbKey].set(dbPath, data);
+          const success = dbService[mapKey].set(dbPath, data);
           maybeThrow(!success, 'Could not create object', 424);
 
           // Write commits to disk
-          dbService[dbKey].push();
+          dbService[mapKey].push();
 
           // Return data
           return {
@@ -106,18 +110,17 @@ module.exports = ({ dbService, schemaService }) => {
         });
     },
 
-    updateObj: (dbKey, data, { schemaNameSuffix, objId, propPath = null }, { owner = null, noAuth = false } = {}) => {
-      debug('updateObj >', data, dbKey, schemaNameSuffix, owner);
+    updateObj: (mapKey, data, { schemaPath, objId, propPath = null }, { owner = null, noAuth = false } = {}) => {
+      debug('updateObj >', data, mapKey, schemaPath, owner);
 
-      const schemaName = makeSchemaName(dbKey, schemaNameSuffix);
+      const schemaName = makeSchemaName(mapKey, schemaPath);
 
       return schemaService.getSchema(schemaName, 'update', { owner, noAuth })
         .then(schema => {
 
-          const dbPath = (owner ? owner.userId + '/' : '') + (schemaNameSuffix || schemaName) + addFileExt('/' + objId);
+          const dbPath = (owner ? owner.userId + '/' : '') + (schemaPath || schemaName) + addFileExt('/' + objId);
 
-          // Get object-clone from db
-          const dbObj = dbService[dbKey].get(dbPath, { clone: true });
+          const dbObj = dbService[mapKey].get(dbPath);
 
           // Check that it exists
           maybeThrow(!dbObj, `ObjId '${objId}' not found`, 404);
@@ -142,11 +145,11 @@ module.exports = ({ dbService, schemaService }) => {
           maybeThrow(!isValid, ajv.errors, 400);
 
           // Update Db
-          const success = dbService[dbKey].set(dbPath, data);
+          const success = dbService[mapKey].set(dbPath, data);
           maybeThrow(!success, 'Could not update object', 424);
 
           // Write commits to disk
-          dbService[dbKey].push();
+          dbService[mapKey].push();
 
           // Return updated data
           return {
@@ -158,18 +161,18 @@ module.exports = ({ dbService, schemaService }) => {
         });
     },
 
-    deleteObj: (dbKey, { schemaNameSuffix, objId, propPath }, { owner = null, noAuth = false } = {}) => {
-      debug('deleteObj >', data, dbKey, schemaNameSuffix, owner);
+    deleteObj: (mapKey, { schemaPath, objId, propPath }, { owner = null, noAuth = false } = {}) => {
+      debug('deleteObj >', data, mapKey, schemaPath, owner);
 
-      const schemaName = makeSchemaName(dbKey, schemaNameSuffix);
+      const schemaName = makeSchemaName(mapKey, schemaPath);
 
       return schemaService.getSchema(schemaName, 'delete', { owner, noAuth })
         .then(schema => {
 
-          const dbPath = (owner ? owner.userId + '/' : '') + (schemaNameSuffix || schemaName) + addFileExt('/' + objId);
+          const dbPath = (owner ? owner.userId + '/' : '') + (schemaPath || schemaName) + addFileExt('/' + objId);
 
           // Get object-clone from db
-          const dbObj = dbService[dbKey].get(dbPath, { clone: true });
+          const dbObj = dbService[mapKey].get(dbPath, { clone: true });
 
           // Check that it exists
           maybeThrow(!dbObj, `ObjId '${objId}' not found`, 404);
@@ -184,11 +187,11 @@ module.exports = ({ dbService, schemaService }) => {
           }
 
           // Update Db
-          const success = dbService[dbKey].delete(dbPath, propPath);
+          const success = dbService[mapKey].delete(dbPath, propPath);
           maybeThrow(!success, 'Could not delete object', 424);
 
           // Write commits to disk
-          dbService[dbKey].push();
+          dbService[mapKey].push();
 
           return success;
         });

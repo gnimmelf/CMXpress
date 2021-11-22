@@ -1,13 +1,12 @@
 /**
   Inspiration: https://github.com/VINTproYKT/node-jsondir-livedb
  */
-const debug = require('debug')('mf:db');
+const debug = require('debug')('mf:fs-db');
 const assert = require('assert');
 const fs = require('fs');
 const chokidar = require('chokidar');
 const { join, resolve } = require('path');
 
-const isObj = require('is-obj');
 const writeFile = require('write-file-atomic').sync;
 const deleteFile = require('delete').sync;
 
@@ -185,7 +184,7 @@ class Db {
   */ {
     if (!relPath) return this.tree;
 
-    options = { clone: false, raw: false, ...options };
+    options = { clone: true, primitivesAsObj: true, ...options };
 
     if (typeof key == 'object') {
       // Assume `key` holds `options`, so swap
@@ -193,22 +192,26 @@ class Db {
       key = undefined;
     }
 
-    const { clone, raw } = options;
-
+    const { clone, primitivesAsObj } = options;
 
     const dotPath = makeDotPath(relPath);
     const value = dotProp.get(this.tree, dotJoin(dotPath, key));
 
     let retVal;
 
-    if (typeof value != 'object') {
+    const isPrimitive = typeof value !== 'object'
+
+    if (isPrimitive) {
       // `value` is a primitive (string, number, bool...), disregard `clone`-option
-      retVal = raw ? value : { [key]: value };
+      retVal = primitivesAsObj ? { [key]: value } : value;
     }
     else {
-      // `value` is `object`
-      retVal = clone ? Object.assign({}, value) : value;
+      // type of `value` is `object`
+      retVal = clone ? JSON.parse(JSON.stringify(value)) : value;
     }
+
+    debug('path', dotJoin(dotPath, key))
+    debug('value', value, { isPrimitive }, '=>', retVal)
 
     return retVal;
   }

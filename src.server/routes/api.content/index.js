@@ -6,10 +6,10 @@ const router = Router();
 const apiContent = makeInvoker(require('../../apis/content'));
 
 // Data
-router.get('/:schemaNameSuffix/list', apiContent('getObjectIds'));
-router.get('/:schemaNameSuffix/:objId/:propPath?', apiContent('getObj'));
-router.post('/:schemaNameSuffix/:objId?/:propPath?', apiContent('setObj'));
-router.delete('/:schemaNameSuffix/:objId/:propPath?', apiContent('deleteObj'))
+router.get('/:schemaPath/list', apiContent('getObjectIds'));
+router.get('/:schemaPath/:objId/:propPath?', apiContent('getObj'));
+router.post('/:schemaPath/:objId?/:propPath?', apiContent('setObj'));
+router.delete('/:schemaPath/:objId/:propPath?', apiContent('deleteObj'))
 
 module.exports = router;
 

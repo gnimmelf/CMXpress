@@ -75,5 +75,5 @@ exports.makeMapKey = (...parts) => {
   return mapKey.endsWith('.json') ? mapKey : mapKey + '.json';
 }
 
-exports.makeSchemaName = (dbKey, schemaNameSuffix) =>
-  `${dbKey}.${schemaNameSuffix ? '.' + schemaNameSuffix : ''}`.replace(/\.+/g, '.');
+exports.makeSchemaName = (mapKey, schemaPath) =>
+  `${mapKey}.${schemaPath ? '.' + schemaPath : ''}`.replace(/\.+/g, '.');

@@ -16,10 +16,10 @@ router.post('/register', api('registerUser'));
 router.post('/update/:userHandle', api('updateUser'));
 
 // User-content
-router.get('/:userHandle/content/:schemaNameSuffix/list', api('getObjectIds'));
-router.get('/:userHandle/content/:schemaNameSuffix/:objId', api('getObj'));
-router.post('/:userHandle/content/:schemaNameSuffix/:objId/:propPath?', api('setObj'));
-router.delete('/:userHandle/content/:schemaNameSuffix/:objId/:propPath?', api('deleteObj'));
+router.get('/:userHandle/content/:schemaPath/list', api('getObjectIds'));
+router.get('/:userHandle/content/:schemaPath/:objId', api('getObj'));
+router.post('/:userHandle/content/:schemaPath/:objId/:propPath?', api('setObj'));
+router.delete('/:userHandle/content/:schemaPath/:objId/:propPath?', api('deleteObj'));
 
 module.exports = router;
 

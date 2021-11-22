@@ -11,7 +11,10 @@ module.exports = ({ objService }) => {
     getObjectIds: (req, res) => {
       debug('getObjectIds', req.params)
 
-      objService.getObjectIds('content', req.params)
+      objService.getObjectIds({
+        mapKey: 'content',
+        ...req.params
+      })
         .then(data => {
           sendApiResponse(res, data)
         })

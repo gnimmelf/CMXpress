@@ -5,10 +5,9 @@
   "ACLg": {
     "*": ["read"]
   },
-  "required": ["handle", "email", "firstName", "lastName"],
+  "required": ["handle", "email", "firstName", "lastName", "cellPhoneNo"],
   "properties": {
     "$ref": ".user.common.json#/properties"
   },
-  "idProperty": "#/handle",
   "isSingleton": true
 }

@@ -13,6 +13,8 @@ module.exports = ({ dbService }) => {
 
   debug('accessGroups', accessGroups)
 
+  debug('accessGroups', accessGroups)
+
   const parseUser = (user) => user && user[IS_PARSED] ? user : ({
     id: user?.userId || false,
     groups: user?.groups || [],
@@ -42,7 +44,7 @@ module.exports = ({ dbService }) => {
 
   const getAccessLevel = (userGroups = []) =>
   /*
-    `MAX_SAFE_INTEGER` is lest secure `accessLevel`, so
+    `MAX_SAFE_INTEGER` is least secure `accessLevel`, so
     - Start with `MAX_SAFE_INTEGER` and decrease the level to the minimum `accessLevel` of the groups
   */ {
     let accessLevel = Number.MAX_SAFE_INTEGER;

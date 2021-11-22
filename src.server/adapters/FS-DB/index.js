@@ -71,7 +71,7 @@ module.exports = deasync(async ({ fsRoot, dbPath }) => {
     dbs['schema'].watcher.on('change', invalidateCache);
     dbs['schema'].watcher.on('unlink', invalidateCache);
 
-    logger.verbose('dbService loaded!', { dbKeys: Object.keys(dbs).join(', ') });
+    logger.verbose('dbService loaded!', { mapKeys: Object.keys(dbs).join(', ') });
 
     return dbs
 })

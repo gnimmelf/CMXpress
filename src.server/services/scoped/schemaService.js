@@ -44,7 +44,7 @@ module.exports = ({ dbService, accessService, userService }) =>
       return new Promise((resolve, reject) => {
         schemaName = makeMapKey(schemaName);
 
-        maybeThrow(!schemaDb.get(schemaName, { raw: true }), `Schema '${schemaName}' not found`, 404)
+        maybeThrow(!schemaDb.get(schemaName), `Schema '${schemaName}' not found`, 404)
 
         // TODO! Move into dbService as it is provider-dependent
         const fsPath = getRelFsPath(join(schemaDb.root, schemaName));

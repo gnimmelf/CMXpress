@@ -29,6 +29,8 @@ module.exports = ({ dbService }) => {
       if (!this[GROUPS]) {
         const groups = userDb.get(join(this[USERID], 'auth.json'), 'groups');
 
+        console.log({ groups })
+
         // Set groups, automatically add `user`-group
         this[GROUPS] = groups.concat('user')
       }

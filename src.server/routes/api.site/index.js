@@ -8,8 +8,8 @@ const api = makeInvoker(require('../../apis/site'));
 // Site
 router.get('/list', api('getObjectIds'));
 
-router.get('/:schemaNameSuffix/:propPath?', api('getObj'));
-router.post('/:schemaNameSuffix/:propPath?', api('setObj'));
+router.get('/:schemaPath/:propPath?', api('getObj'));
+router.post('/:schemaPath/:propPath?', api('setObj'));
 
 module.exports = router;
 
