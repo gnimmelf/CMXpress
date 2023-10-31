@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:service:accessService');
+const debug = require('debug')('cmx:service:accessService');
 const { join } = require('path');
 const intersect = require('intersect');
 const {

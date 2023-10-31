@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:api:inspect');
+const debug = require('debug')('cmx:api:inspect');
 
 const expressListEndpoints = require('express-list-endpoints');
 

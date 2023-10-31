@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:middleware:authenticateHeaderToken');
+const debug = require('debug')('cmx:middleware:authenticateHeaderToken');
 const { asValue, asFunction } = require('awilix');
 const { makeSingleInvoker, maybeThrow } = require('../lib/utils');
 

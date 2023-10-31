@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:service:userService');
+const debug = require('debug')('cmx:service:userService');
 const { join } = require('path');
 const assert = require('assert');
 

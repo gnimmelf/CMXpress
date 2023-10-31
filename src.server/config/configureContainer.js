@@ -20,6 +20,12 @@ module.exports = (app, {
 }) => {
   const container = createContainer();
 
+
+  assert(fsRoot, 'fsRoot not set')
+  assert(process.env.DB_PATH, 'DB_PATH not set')
+  assert(process.env.TOKEN_KEY, 'TOKEN_KEY not set')
+  assert(process.env.TOKEN_SECRET, 'TOKEN_SECRET not set')
+
   container.register({
     'app': asValue(app),
     'fsRoot': asValue(fsRoot),

@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:service:mailService');
+const debug = require('debug')('cmx:service:mailService');
 const fs = require('fs');
 const { join } = require('path');
 const nodemailer = require('nodemailer');
@@ -36,4 +36,3 @@ module.exports = ({ nodemailerTransport }) => {
   }
 
 }
-

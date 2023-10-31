@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:service:objService');
+const debug = require('debug')('cmx:service:objService');
 const Ajv = require('ajv');
 const jsonPointer = require('js-pointer');
 const slug = require('slug');

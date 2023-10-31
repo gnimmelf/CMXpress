@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:middleware:authorizeUser');
+const debug = require('debug')('cmx:middleware:authorizeUser');
 const intersect = require('intersect');
 const normalizeBool = require('normalize-bool');
 const {

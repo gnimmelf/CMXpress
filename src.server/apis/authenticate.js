@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:api:authenticate');
+const debug = require('debug')('cmx:api:authenticate');
 
 const {
   sendApiResponse

@@ -275,9 +275,9 @@ const createFileStructure = function () {
 
 const installPackages = function () {
   // Npm Linking
-  console.info('Linking to manifester...');
-  shell.exec(`npm link manifester -S`, { silent: false, cwd: store.project_path }, function (err, stdout, stderr) {
-    checkErrorVar(err, 'Could not link to manifester. Make sure you have npm-linked it allready!');
+  console.info('Linking to cmx...');
+  shell.exec(`npm link cmx -S`, { silent: false, cwd: store.project_path }, function (err, stdout, stderr) {
+    checkErrorVar(err, 'Could not link to cmx. Make sure you have npm-linked it allready!');
     nextStep();
   })
 }
@@ -310,7 +310,7 @@ const showFeedback = function () {
   console.info('done');
 
   console.info(`run '${path_diff_str} npm install'`);
-  console.info(`(Also run 'npm link manifester' if you have git cloned that repo...)`)
+  console.info(`(Also run 'npm link cmx' if you have git cloned that repo...)`)
 }
 
 /**

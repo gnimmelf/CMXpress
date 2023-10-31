@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:service:schemaService');
+const debug = require('debug')('cmx:service:schemaService');
 const { join, relative } = require('path');
 const assert = require('assert');
 const $RefParser = require('json-schema-ref-parser');

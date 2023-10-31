@@ -1,7 +1,7 @@
 /**
   Inspiration: https://github.com/VINTproYKT/node-jsondir-livedb
  */
-const debug = require('debug')('mf:fs-db');
+const debug = require('debug')('cmx:fs-db');
 const assert = require('assert');
 const fs = require('fs');
 const chokidar = require('chokidar');

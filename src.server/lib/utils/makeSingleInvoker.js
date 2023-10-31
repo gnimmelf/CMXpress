@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:make-single-invoker');
+const debug = require('debug')('cmx:make-single-invoker');
 
 module.exports = (cradleScopeFn) =>
 // https://github.com/talyssonoc/awilix-express/blob/master/lib/invokers.js

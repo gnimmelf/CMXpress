@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:routes:api.authenticate')
+const debug = require('debug')('cmx:routes:api.authenticate')
 const { Router } = require('express');
 const { makeInvoker } = require('awilix-express');
 

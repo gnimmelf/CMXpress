@@ -1,7 +1,7 @@
  {
-  "name": "[Manifester]",
+  "name": "[cmx]",
   "version": "[0.0.1]",
-  "description": "[Manifester site]",
+  "description": "[cmx site]",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

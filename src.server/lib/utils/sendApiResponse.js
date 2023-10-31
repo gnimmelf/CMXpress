@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:sendApiResponse');
+const debug = require('debug')('cmx:sendApiResponse');
 const RESTfulError = require('../RESTfulError');
 
 const loggers = require('./loggers');

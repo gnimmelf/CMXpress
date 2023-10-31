@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:service:authService');
+const debug = require('debug')('cmx:service:authService');
 const { join } = require('path');
 const jwt = require('jsonwebtoken');
 const makeLoginCode = require('../../lib/makeLoginCode');

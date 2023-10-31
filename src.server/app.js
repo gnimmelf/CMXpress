@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:app');
+const debug = require('debug')('cmx:app');
 
 const { join } = require('path');
 const assert = require('assert');

@@ -1,5 +1,5 @@
 /**
- * Export the Manifester app.
+ * Export the cmx app.
  */
 const http = require('http');
 const assert = require('assert');

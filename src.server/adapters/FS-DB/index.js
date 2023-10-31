@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:adapters');
+const debug = require('debug')('cmx:adapters:fsdb');
 const jsonPath = require('jsonpath');
 const { join } = require('path');
 const Db = require('./FS-DB');
@@ -29,6 +29,8 @@ const proxyHandler = {
 const logger = loggers.get('default');
 
 module.exports = deasync(async ({ fsRoot, dbPath }) => {
+
+    debug('params', { fsRoot, dbPath })
 
     fsRootPath = join(fsRoot, dbPath)
 
@@ -75,4 +77,3 @@ module.exports = deasync(async ({ fsRoot, dbPath }) => {
 
     return dbs
 })
-

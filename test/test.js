@@ -5,7 +5,7 @@ const dotProp = require('dot-prop')
 const express = require('express');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const manifester = require('../index');
+const cmx = require('../index');
 require('dotenv').config()
 
 const SOURCE_DIR = join(__dirname, '../db.blueprint');
@@ -37,7 +37,7 @@ sh.mkdir('-p', TMP_DIR);
 sh.cp('-r', SOURCE_DIR, join(TMP_DIR, process.env.DB_PATH))
 
 const localApp = express()
-localApp.use('/api', manifester.getApp({ fsRoot: TMP_DIR }))
+localApp.use('/api', cmx.getApp({ fsRoot: TMP_DIR }))
 localApp.use('/', (req, res) => res.send('Test App\n'));
 
 const agent = chai.request.agent(localApp)

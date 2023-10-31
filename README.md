@@ -8,12 +8,17 @@ Under leisure development.
 
 ### TODO!
 
-1. Refactor to use adapters for dbService. All FS-DB stuff into respective adapter. Add LMDB adapter <= Set to default?
-2. Write tests (when proof-of-concept is valid) <= Include `db.blueprint` in tests, not in app...?
+1. Write tests (when proof-of-concept is valid) <= Include `db.blueprint` in tests, not in app...?
+
+   - This will make me remember how stuff works after taking a break...
+
+2. Refactor to use adapters for dbService. All FS-DB stuff into respective adapter.
+
+   - `lmdb-store` has compatibility-issues with node 18(? / !)
+
 3. Redo templateService, too complex
 4. Implement user registration & update
 5. Update JSON-scema to latest AJV implemented draft
-
 6. Secure all string-schema fields by patterns
 7. Swap generator to Yeoman? <= Do I even need a generator? -CLI?
 8. Publish on Npm

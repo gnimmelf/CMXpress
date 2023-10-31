@@ -1,4 +1,4 @@
-const debug = require('debug')('mf:api:content');
+const debug = require('debug')('cmx:api:content');
 
 const {
   sendApiResponse,
