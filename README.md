@@ -2,7 +2,7 @@
 
 _JSON-Schema based headless CMS_
 
-NOTE! SurrealDB has made this project obsolete. Yay!
+NOTE! [SurrealDB(-access options)](https://surrealdb.com/docs/surrealdb/security/authentication) has made this project obsolete. Yay!
 
 ## Status
 
