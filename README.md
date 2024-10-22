@@ -2,6 +2,8 @@
 
 _JSON-Schema based headless CMS_
 
+NOTE! SurrealDB has made this project obsolete. Yay!
+
 ## Status
 
 Under leisure development.
